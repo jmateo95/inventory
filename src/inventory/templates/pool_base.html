@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block body_extra %}
+
+{% endblock %}
+
+{% block page_content %}
+
+  <!-- Begin page -->
+  <div id="wrapper">
+
+    {% block topbar %}
+      {% include 'partials/topbar.html' %}
+    {% endblock %}
+
+    {% block sidebar %}
+      {% include 'partials/sidebar.html' %}
+    {% endblock %}
+
+    <div class="content-page">
+      <div class="content">
+        {% include 'partials/messages.html' %}
+        {% block content %}{% endblock %}
+      </div>
+      {% block footer %}
+        {% include 'partials/footer.html' %}
+      {% endblock %}
+    </div>
+  </div>
+  <!-- END wrapper -->
+  {% block right_sidebar %}
+    
+  {% endblock %}
+{% endblock %}
