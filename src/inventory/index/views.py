@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json
 from django.contrib import messages
+
+from inventory.index.forms import UsersForm
 
 # Create your views here.
 
@@ -21,10 +23,22 @@ def index(request):
     nombre='Jonathan'
 
     #messages.success(request, "Registration successful." )
+
+    form = UsersForm(request.POST or None, request.FILES or None)
+
+
     context = {
         'options' :json_option ,
         'names':json_name,
-        'nombre': nombre
+        'nombre': nombre,
+        'form' : form,
     }
-    #return render(request, "index/index.html", context)
-    return render(request, "prueba.html", context)
+    return render(request, "index/index.html", context) 
+
+
+def addgraph(request):
+    form = UsersForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        messages.success(request, "Formulario")
+        return redirect ('/')
+        

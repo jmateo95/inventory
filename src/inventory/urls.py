@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from inventory.index.views import index
+from inventory.index.views import index, addgraph
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', index, name='home'),
-    path ('nombre/', index, name='path2')
+    path ('nombre/', index, name='path2'),
+
+
+
+    path('dashboard/row/graph/add', addgraph,name='add_graph'),
 
 ]
