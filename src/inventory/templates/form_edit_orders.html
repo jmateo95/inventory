@@ -1,0 +1,71 @@
+{% extends "pool_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block page_content %}
+
+    {% block right_sidebar %}
+   
+    {% endblock %}
+
+    <h1> Hola </h1>
+
+     <!-- Button trigger modal -->
+     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modify Product</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <!-- Formulario modificar orden de product -->
+                <form>
+                    
+                    <!-- Nombre del Producto -->
+                    <div class="mb-3 row">
+                        <label for="name" id="name" class="col-sm-2 col-form-label">Product</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" placeholder="Name of Product" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                         <!-- Categoria -->
+                        <div class="col">
+                            <label for="category" id="category" class="col-sm-2 col-form-label">Category</label>
+                            
+                            <input class="form-control" type="text" placeholder="Category of Product" disabled>
+                            
+                        </div>
+                        
+                         <!-- Categoria -->
+                         <div class="col">
+                            <label for="category" id="category" class="col-sm-2 col-form-label">Category</label>
+                            <input class="form-control" type="text" placeholder="Category of Product" disabled>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Pie de Pagina Botones de Guardar Cambios y Cerrar-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                   
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+{% endblock %}
+    
