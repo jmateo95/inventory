@@ -18,9 +18,13 @@ def index(request):
     json_option = json.dumps(option)
     json_name = json.dumps(name)
 
+    nombre='Jonathan'
+
     #messages.success(request, "Registration successful." )
     context = {
         'options' :json_option ,
-        'names':json_name 
+        'names':json_name,
+        'nombre': nombre
     }
-    return render(request, "index/index.html", context)
+    #return render(request, "index/index.html", context)
+    return render(request, "prueba.html", context)

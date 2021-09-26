@@ -1,0 +1,138 @@
+{% extends "pool_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <form class="d-flex align-items-center mb-3">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control border-0 shadow" id="dash-daterange">
+                            <span class="input-group-text bg-blue border-blue text-white">
+                                <i class="mdi mdi-calendar-range"></i>
+                            </span>
+                        </div>
+                        <a  href="javascript:window.location.reload()" class="btn btn-blue btn-sm ms-2">
+                            <i class="mdi mdi-autorenew"></i>
+                        </a>
+                        <!--a href="javascript: void(0);" class="btn btn-blue btn-sm ms-1">
+                            <i class="mdi mdi-filter-variant"></i>
+                        </a-->
+                    </form>
+                </div>
+                <h4 class="page-title">DASHBOARD APACHE</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+
+    <!--Body-->
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <div style=" float: left; width: 33.33%;">
+                    <div id="id_0" style="width:400px; height:400px;"></div>
+                </div>
+                <div style=" float: left; width: 33.33%;padding-left: 2em" >
+                    <div id="id_1" style="width:400px; height:400px;"></div>
+                </div>
+                <div style=" float: left; width: 30.33%;">
+                    <div id="id_2" style="width:400px; height:400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+
+
+<script type="text/javascript">
+    // based on prepared DOM, initialize echarts instance
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // specify chart configuration item and data
+    var option = {
+        title: {
+            text: 'ECharts'
+        },
+        tooltip: {},
+        legend: {
+            data:['Sales']
+        },
+        xAxis: {
+            data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
+        },
+        yAxis: {},
+        series: [{
+            name: 'Sales',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+
+    // use configuration item and data specified to show chart
+    myChart.setOption(option);
+</script>
+
+
+<script type="text/javascript">
+    
+    var chartDom = document.getElementById('main1');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        title: {
+        text: 'Hola'
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [150, 230, 224, 218, 135, 147, 260],
+            type: 'line',
+            name: 'uno'
+        },
+        {
+            data: [160, 220, 214, 228, 145, 157, 270],
+            type: 'line',
+            name: 'dos'
+        }
+    ]
+    };
+
+    myChart.setOption(option);
+</script>
+
+
+<script>
+    var options = ("{{options|escapejs}}");
+    var names = ("{{names|escapejs}}");
+    const objOptions = JSON.parse(options);
+    const objNames = JSON.parse(names);
+    for (var i = 0; i < objNames.length; i++) {
+        var chartDom = document.getElementById(objNames[i]);
+        var myChart = echarts.init(chartDom);
+        const obj = JSON.parse(objOptions[i]);
+        myChart.setOption(obj);
+    }
+</script>
+
+{% endblock%}
