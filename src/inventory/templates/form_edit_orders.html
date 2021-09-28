@@ -1,71 +1,133 @@
-{% extends "pool_base.html" %}
-{% load static i18n %}
-{% load crispy_forms_tags %}
+{% extends "inventory_base.html" %}
 
-{% block extra_css %}
-{% endblock %}
+<!-- Contenido del Form -->
+{% block content %}
 
-{% block page_content %}
+{% block form_edit_order %}
 
-    {% block right_sidebar %}
-   
-    {% endblock %}
-
-    <h1> Hola </h1>
-
-     <!-- Button trigger modal -->
-     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Launch demo modal
-    </button>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modify Product</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+{% if exito %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-5">
+            <br><br><br>
+            <div class="alert alert-success" role="alert">
+                The order point and reorder point were assigned correctly
             </div>
-            <div class="modal-body">
-            <!-- Formulario modificar orden de product -->
-                <form>
-                    
-                    <!-- Nombre del Producto -->
-                    <div class="mb-3 row">
-                        <label for="name" id="name" class="col-sm-2 col-form-label">Product</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="text" placeholder="Name of Product" disabled>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                         <!-- Categoria -->
-                        <div class="col">
-                            <label for="category" id="category" class="col-sm-2 col-form-label">Category</label>
-                            
-                            <input class="form-control" type="text" placeholder="Category of Product" disabled>
-                            
-                        </div>
-                        
-                         <!-- Categoria -->
-                         <div class="col">
-                            <label for="category" id="category" class="col-sm-2 col-form-label">Category</label>
-                            <input class="form-control" type="text" placeholder="Category of Product" disabled>
-                        </div>
-                        
-                    </div>
-
-                    <!-- Pie de Pagina Botones de Guardar Cambios y Cerrar-->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                   
-                </form>
-            </div>
-        </div>
         </div>
     </div>
-  
+</div>
+
+{% endif %}
+
+{% if bandera %}
+
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <br><br><br><br> <br><br><br><br>  <br><br><br><br>
+    <!--Body-->
+
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-5">
+            <div class="card" style="border-radius: 15px;">
+                <div class="card-body">
+                    <form method="post", enctype="multipart/form-data0">
+                        {% csrf_token %}
+
+                        <!-- Nombre del Producto -->
+                        <div class="mb-3 row">
+                            <label for="lblname" class="col-sm-2 col-form-label">Product</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="name" id="lblname" type="text" placeholder="{{ product.name }}" disabled>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row">
+                            <!-- Categoria -->
+                           <div class="col-md-6">
+                               <label for="lblcategory" class="form-label">Category</label>
+                               <input class="form-control" name="category" id="lblcategory" type="text" placeholder="{{ product.category }}" disabled>
+                           </div>
+                           
+                           <!-- Cantidad -->
+                           <div class="col-md-6">
+                               <label for="lblquantity" class="form-label">Quantity</label>
+                               <input class="form-control" name="quantity" id="lblquantity" type="text" placeholder="{{ product.quantity }}" disabled>
+                           </div>
+                       </div>
+                       <br>
+                       <div class="row">
+                            <!-- Order Point -->
+                            <div class="col-md-6">
+                                <label for="lblorderpoint"  class="form-label">Order Point</label>
+                                <input class="form-control" name="orderpoint" id="lblorderpoint"type="number" min="0" placeholder="Order Point" value="{{ product.orderpoint }}" required>
+                            </div>
+                            
+                            <!-- Reorder Point -->
+                            <div class="col-md-6">
+                                <label for="lblreorderpoint"  class="form-label">Reorder Point</label>
+                                <input class="form-control" name="reorderpoint" id="lblreorderpoint" type="number" min="0" placeholder="Reorder Point" value="{{ product.reorderpoint }}"required>
+                            </div>
+                        </div>
+                        <center>
+                            <br>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            </div>
+                        </center>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+    <!--End Body-->       
+</div>
+<!-- container -->
+<br><br><br><br> <br><br><br><br>  <br><br><br><br> 
+
+{% endif %}
+
+{% endblock%}
+
+<!-- lista provisonal -->
+<table>
+    <thead>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Order Point</th>
+        <th>Reorder Point</th>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>
+                {{ product.name }}
+            </td>
+            <td>
+                {{ product.quantity }}
+            </td>
+            <td>
+                {{ product.orderpoint }}
+            </td>
+            <td>
+                {{ product.reorderpoint }}
+            </td>
+            <td>
+                <a href="{% url 'edit_order' product.id %}">Editar Order</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
 {% endblock %}
-    
