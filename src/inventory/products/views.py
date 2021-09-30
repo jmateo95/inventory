@@ -13,7 +13,7 @@ def modify(request):
         'products':products,
         'bandera':bandera
     }
-    return render(request, "form_edit_orders.html", context) 
+    return render(request, "manager/form_edit_orders.html", context) 
 
 def modify_order_product(request,id):
     product = ProductType.objects.get(id = id)
@@ -28,6 +28,6 @@ def modify_order_product(request,id):
         product.reorderpoint = request.POST.get('reorderpoint')
         product.orderpoint = request.POST.get('orderpoint')
         product.save()
-        messages.success(request, "The order point and reorder point were assigned correctly")
+        messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('list')
-    return render(request,"form_edit_orders.html",context)
+    return render(request,"manager/form_edit_orders.html",context)

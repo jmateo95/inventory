@@ -22,7 +22,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', index, name='home'),
     path ('nombre/', index, name='path2'),
-    path('dashboard/row/graph/add', addgraph,name='add_graph'),
-    path('form_edit_order/', modify, name='list'),
-    path('edit_order/<int:id>/', modify_order_product, name='edit_order')
+    path('dashboard/row/graph/add', addgraph,name='add_graph'), 
+    # Paths para las funciones de administrador
+    path('manager/form_edit_order/', modify, name='list'),
+    path('manager/edit_order/<int:id>/', modify_order_product, name='edit_order')
 ]
