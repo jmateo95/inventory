@@ -16,14 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from inventory.index.views import index, addgraph
+from inventory.products.views import modify, modify_order_product
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', index, name='home'),
     path ('nombre/', index, name='path2'),
-
-
-
-    path('dashboard/row/graph/add', addgraph,name='add_graph'),
-
+    path('dashboard/row/graph/add', addgraph,name='add_graph'), 
+    # Paths para las funciones de administrador
+    path('manager/form_edit_order/', modify, name='list'),
+    path('manager/edit_order/<int:id>/', modify_order_product, name='edit_order')
 ]
