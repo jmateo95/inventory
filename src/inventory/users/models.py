@@ -13,7 +13,8 @@ class Rol(models.Model):
 
     def __str__(self):
         return self.rol
-
+    def get_rol(self):
+        return self.rol
 
 class User (AbstractUser):
     rol=models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True, default=1)
