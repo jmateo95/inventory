@@ -40,7 +40,8 @@
                         <div class="mb-3 row">
                             <label for="lblname" class="col-sm-2 col-form-label">Categoria*:</label>
                             <div class="col-sm-10">
-                                <input class="form-control" name="name" id="lblname" type="text" placeholder="Nombre de la Categoria" required>
+                                <input class="form-control" name="name" id="lblname" type="text" placeholder="Nombre de la Categoria" pattern="[A-Za-z]+" title="Solo Letras" required>
+                                <small>Formato: [A-Za-z]</small>
                             </div>
                         </div>
                         <center>
