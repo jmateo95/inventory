@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, ProductType
-from .forms import ProductForm, CategoryForm
+from .models import Category, ProductType, Suplier
+from .forms import ProductForm, CategoryForm, SupplierForm
 
 # Create your views here.
 
@@ -56,3 +56,31 @@ def create_category(request):
                 messages.success(request, "Categoria \"" + request.POST.get('name') + "\" Agregada")
                 return redirect('home')
     return render(request,"manager/form_create_category.html", context)
+
+def create_supplier(request):
+    exist = False
+    suppliers = Suplier.objects.all()
+    if request.method == 'GET':
+        context = {
+            'success':exist
+        }
+    else:
+        for supplier  in suppliers:
+            if supplier.email.lower() == request.POST.get('email').lower():
+                exist = True
+                print (supplier.email.lower())
+        if exist:
+            context = {
+                'success':exist,
+                'name_supplier':request.POST.get('name'),
+                'address_supplier':request.POST.get('address'),
+                'phone_supplier':request.POST.get('phone'),
+                'email_repeat':request.POST.get('email')
+            }
+        else:
+            supplier = SupplierForm(request.POST)
+            if supplier.is_valid():
+                supplier.save()
+                messages.success(request, "Proveedor \"" + request.POST.get('name') + "\" Agregado")
+                return redirect('home')
+    return render(request,"manager/form_create_supplier.html",context)
