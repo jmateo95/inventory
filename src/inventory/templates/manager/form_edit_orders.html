@@ -64,13 +64,13 @@
                        <div class="row">
                             <!-- Order Point -->
                             <div class="col-md-6">
-                                <label for="lblorderpoint"  class="form-label">Punto de Orden</label>
+                                <label for="lblorderpoint"  class="form-label">Punto de Orden*</label>
                                 <input class="form-control" name="orderpoint" id="lblorderpoint"type="number" min="0" placeholder="Order Point" value="{{ product.orderpoint }}" required>
                             </div>
                             
                             <!-- Reorder Point -->
                             <div class="col-md-6">
-                                <label for="lblreorderpoint"  class="form-label">Punto de Reorden</label>
+                                <label for="lblreorderpoint"  class="form-label">Punto de Reorden*</label>
                                 <input class="form-control" name="reorderpoint" id="lblreorderpoint" type="number" min="0" placeholder="Reorder Point" value="{{ product.reorderpoint }}"required>
                             </div>
                         </div>
@@ -81,7 +81,6 @@
                                 <a class="btn btn-secondary" href="{% url 'list' %}">Regresar</a>
                             </div>
                         </center>
-                        
                     </form>
                     
                 </div>
