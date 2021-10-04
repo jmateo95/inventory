@@ -2,6 +2,7 @@ from django import forms
 from django.forms import fields
 from .models import ProductType, Category, Suplier
 from django.forms import ModelForm, TextInput, EmailInput
+from django.forms.fields import ChoiceField, CharField, IntegerField
 from .models import ProductType
 
 
@@ -28,7 +29,7 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['orderpoint'].required = False 
         self.fields['orderquantity'].required = False 
-        self.fields['name']= TextInput(label="Nombre", required =True)  
+        self.fields['name']= CharField(label="Nombre", required =True)  
 
 
         fields = '__all__'
