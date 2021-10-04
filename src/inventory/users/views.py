@@ -31,3 +31,10 @@ def newuser(request):
     else:
         messages.error(request, "Ya existe un usuario con el correo o username.")
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+def listuser(request):
+    context = {
+        'hola' : 'hola',
+    }
+    return render(request, "administrator/listuser.html", context)

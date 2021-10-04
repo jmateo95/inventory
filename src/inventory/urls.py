@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from inventory.index.views import index, addgraph
 from inventory.products.views import modify, modify_order_product
-from inventory.users.views import adduser, newuser
+from inventory.users.views import adduser, newuser, listuser
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -27,9 +27,10 @@ urlpatterns = [
     #Jonathan
     path('administrator/adduser/', adduser, name='adduser'),
     path('administrator/newuser/', newuser, name='newuser'),
+    path('administrator/listuser/', listuser, name='listuser'),
     
     
     # Paths para las funciones de administrador
     path('manager/form_edit_order/', modify, name='list'),
-    path('manager/edit_order/<int:id>/', modify_order_product, name='edit_order')
+    path('manager/edit_order/<int:id>/', modify_order_product, name='edit_order'),
 ]
