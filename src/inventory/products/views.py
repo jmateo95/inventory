@@ -31,3 +31,19 @@ def modify_order_product(request,id):
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('list')
     return render(request,"manager/form_edit_orders.html",context)
+def create_product_type(request):
+    """Create a product type"""
+    if request.method != 'POST':
+        #No data submitted
+        form = ProductForm()
+    else:
+        #POST data submitted
+        if request.POST["cancel"]:
+            return redirect("/") 
+        form = ProductForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'El tipo de producto se creo correctamente!!')
+            return redirect("/") 
+    context = {'form': form}        
+    return render(request, "manager/create_product_type.html", context) 
