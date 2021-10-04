@@ -20,7 +20,7 @@
                     </a>
 
                     <!-- item-->
-                    {% if  user.rol.get_rol == 'Admin' %}
+                    {% if  user.rol.get_rol == 'Administrador' %}
                         <a href="{% url 'admin:index' %}" class="dropdown-item notify-item">
                             <i class="fe-settings me-1"></i>
                             <span>Settings</span>
@@ -45,6 +45,29 @@
 
         <!--- Sidemenu -->
         <div id="sidebar-menu">
+
+
+            {% if  user.rol.get_rol == 'Administrador' %}
+            <ul id="side-admin">
+                <li class="menu-title">Administración</li>
+                <li>
+                    <a href="#sidebarUsers" data-bs-toggle="collapse">
+                        <i data-feather="users"></i>
+                        <span> Usuarios </span>
+                    </a>
+                    <div class="collapse" id="sidebarUsers">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'adduser' %}">
+                                    <span> Añadir Usuarios </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            {% endif %}
 
             <ul id="side-menu">
                 <li class="menu-title">Menu</li>

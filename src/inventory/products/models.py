@@ -23,9 +23,9 @@ class Suplier(models.Model):
 
 class ProductType (models.Model):
     id=models.AutoField(primary_key=True)
-    name=models.CharField(max_length=200)
-    orderpoint=models.IntegerField()
-    reorderpoint=models.IntegerField()
+    name=models.CharField(max_length=200, unique=True)
+    orderpoint=models.IntegerField(null=True)
+    orderquantity=models.IntegerField(null=True)
     quantity=models.IntegerField()
     category=models.ForeignKey(Category, on_delete=CASCADE, related_name='Category_Products')
 

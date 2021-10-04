@@ -16,7 +16,7 @@
                 <div class="page-title-right">
                     
                 </div>
-                <h4 class="page-title">TITULO</h4>
+                <h4 class="page-title">Nuevo Tipo De Producto</h4>
             </div>
         </div>
     </div>     
@@ -24,12 +24,18 @@
     <!--Body-->
 
 
-    <div class="row">
-   
-   
-   
-   
+    <div class="row">  
+        <form  method = 'post'>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button name="cancel" value="cancel" class="btn btn-danger"/>Cancelar</button>
+            <button name="submit" class="btn btn-primary">Crear</button>
+            
+          </form> 
     </div> 
+
+
+
     <!--End Body-->       
 </div>
 <!-- container -->
