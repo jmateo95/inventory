@@ -1,0 +1,45 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title">Nuevo Tipo De Producto</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+
+    <div class="row">  
+        <form  method = 'post'>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button name="cancel" value="cancel" class="btn btn-danger"/>Cancelar</button>
+            <button name="submit" class="btn btn-primary">Crear</button>
+            
+          </form> 
+    </div> 
+
+
+
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+
+{% endblock%}
