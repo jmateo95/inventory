@@ -31,7 +31,6 @@ def modify_order_product(request,id):
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('list')
     return render(request,"manager/form_edit_orders.html",context)
-<<<<<<< HEAD
 
 def create_category(request):
     categories = Category.objects.all()
@@ -85,7 +84,8 @@ def create_supplier(request):
                 messages.success(request, "Proveedor \"" + request.POST.get('name') + "\" Agregado")
                 return redirect('home')
     return render(request,"manager/form_create_supplier.html",context)
-=======
+
+
 def create_product_type(request):
     """Create a product type"""
     if request.method != 'POST':
@@ -102,4 +102,3 @@ def create_product_type(request):
             return redirect("/") 
     context = {'form': form}        
     return render(request, "manager/create_product_type.html", context) 
->>>>>>> create_product_type_#19
