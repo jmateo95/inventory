@@ -46,7 +46,6 @@
         <!--- Sidemenu -->
         <div id="sidebar-menu">
 
-
             {% if  user.rol.get_rol == 'Administrador' %}
             <ul id="side-admin">
                 <li class="menu-title">Administración</li>
@@ -73,6 +72,76 @@
             </ul>
 
             {% endif %}
+
+            {% if  user.rol.get_rol == 'Gerente' %}
+            <ul id="side-manager">
+                <li class="menu-title">Gerencia</li>
+                <li>
+                    <!-- Area de Productos -->
+                    <a href="#sidebarManagerProducts" data-bs-toggle="collapse">
+                        <i data-feather="layers"></i>
+                        <span> Productos </span>
+                    </a>
+                    <div class="collapse" id="sidebarManagerProducts">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'type_create' %}">
+                                    <span> Añadir Producto  </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="btn-abrir-popup" href="#">
+                                    <span> Lista de Productos </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Area de Categorias -->
+                    <a href="#sidebarManagerCategories" data-bs-toggle="collapse">
+                        <i data-feather="book"></i>
+                        <span> Categorias </span>
+                    </a>
+                    <div class="collapse" id="sidebarManagerCategories">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'create_category' %}">
+                                    <span> Añadir Categorias  </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'list_categories' %}">
+                                    <span> Lista de Categorias </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Area de Proveedores -->
+                    <a href="#sidebarManagerSupplier" data-bs-toggle="collapse">
+                        <i data-feather="truck"></i>
+                        <span> Proveedores </span>
+                    </a>
+                    <div class="collapse" id="sidebarManagerSupplier">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'create_supplier' %}">
+                                    <span> Añadir Proveedor  </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="btn-abrir-popup" href="#">
+                                    <span> Lista de Proveedores </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </li>
+            </ul>
+
+            {% endif %}
+
 
             <ul id="side-menu">
                 <li class="menu-title">Menu</li>

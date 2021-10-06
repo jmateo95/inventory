@@ -25,7 +25,7 @@ def modify_order_product(request,id):
             'bandera':True
         }
     else:
-        product.reorderpoint = request.POST.get('reorderpoint')
+        product.orderquantity = request.POST.get('reorderpoint')
         product.orderpoint = request.POST.get('orderpoint')
         product.save()
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
@@ -101,3 +101,10 @@ def create_product_type(request):
             return redirect("/") 
     context = {'form': form}        
     return render(request, "manager/create_product_type.html", context) 
+
+def list_categories(request):
+    categories = Category.objects.all()
+    context = {
+            'categories':categories
+        }
+    return render(request, "manager/list_categories.html", context)
