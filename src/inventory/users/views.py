@@ -34,7 +34,8 @@ def newuser(request):
 
 
 def listuser(request):
+    users=User.objects.all()
     context = {
-        'hola' : 'hola',
+        'users' : users,
     }
     return render(request, "administrator/listuser.html", context)
