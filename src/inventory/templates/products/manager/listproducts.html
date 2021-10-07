@@ -37,7 +37,7 @@
                             <th>Nombre</th>
                             <th>Punto de Reorden</th>
                             <th>Productos a Ordenar</th>
-                            <th>Cantidad</th>
+                            <th>Existencia</th>
                             <th>Categoria</th>
                             <th style="width: 6em; text-align: center;">Acciones</th>
                         </tr>
@@ -61,7 +61,13 @@
                             <td>{{ product.name }}</td>
                             <td>{{ product.orderpoint }}</td>
                             <td>{{ product.orderquantity }}</td>
-                            <td>{{ product.quantity }}</td>
+                            <td>
+                                {% if product.quantity > orderpoint %}
+                                    <span class="badge bg-soft-success text-success" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>
+                                {% else %}
+                                    <span class="badge bg-soft-danger text-danger" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>
+                                {% endif %}
+                            </td>
                             <td>{{ product.category }}</td>
                             <td style="text-align: center;">    
                                 <small style="font-size: 1.5em"><a href="#"><i class="fe-edit" title="Editar"></i></a></small>
