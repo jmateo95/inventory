@@ -31,7 +31,7 @@ urlpatterns = [
     path('administrator/adduser/', adduser, name='adduser'),
     path('administrator/newuser/', newuser, name='newuser'),
     path('administrator/listuser/', listuser, name='listuser'),
-    path('administrator/listuser/deleteuser/<int:id>/', deleteuser, name='deleteuser'),
+    path('administrator/deleteuser/<int:id>/', deleteuser, name='deleteuser'),
 
     path('manager/listproduct/', listproduct, name='listproduct'),
     
