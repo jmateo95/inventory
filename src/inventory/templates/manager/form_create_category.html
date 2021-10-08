@@ -24,8 +24,8 @@
     <!--Body-->
 
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
+        
+        <div class="col-5" style="padding-left: 3em;">
 
             <!-- Formulario de crear Categoria -->
             <div class="card" style="border-radius: 25px;">
@@ -61,8 +61,8 @@
                         <!-- Nombre de la Categoria -->
                         <br>
                         <div class="mb-3 row">
-                            <label for="lblname" class="col-sm-2 col-form-label">Categoria*:</label>
-                            <div class="col-sm-10">
+                            <label for="lblname" class="col-sm-3 col-form-label">Categoria*:</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" name="name" id="lblname" type="text" placeholder="Nombre de la Categoria" pattern="[A-Za-z]+" title="Solo Letras" required>
                                 <small>Formato: [A-Za-z]</small>
                             </div>
@@ -80,7 +80,7 @@
 
         </div>
         <!-- Lista de categorias -->
-        <div class="row" style="padding-left: 3em; padding-right: 3em;">
+        <div class="col-7" style="padding-left: 3em; padding-right: 3em;">
             <div class="card" style="border-radius: 25px;">
                 <div class="card-body p-4"> 
                     <table id="list_categorias"class="table table-striped table-hover" style="width:100%">

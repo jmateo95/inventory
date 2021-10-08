@@ -73,7 +73,7 @@
 
             {% endif %}
 
-            {% if  user.rol.get_rol == 'Gerente' %}
+            {% if  user.rol.get_rol == 'Bodeguero' %}
             <li class="menu-title">Gerencia</li>
             <ul id="side-manager">
                 
@@ -91,7 +91,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a  class="btn-abrir-popup" href="#">
+                                <a  class="btn-abrir-popup" href="{% url 'listproduct' %}">
                                     <span> Lista de Productos </span>
                                 </a>
                             </li>
