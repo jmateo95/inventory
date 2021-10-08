@@ -24,7 +24,7 @@ class ProductForm(forms.ModelForm):
         self.fields['name']= CharField(label="Nombre", required =True) 
         self.fields['orderpoint']= IntegerField(label="Punto De Reorden", required =False,min_value=0) 
         self.fields['orderquantity']= IntegerField( label="Cantidad De Reorden", required =False,min_value=0)
-        self.fields['category']= ModelChoiceField(queryset= Category.objects, label="Categoria", required =True, placeholder='Seleccione una categoria')  
+        self.fields['category']= ModelChoiceField(queryset= Category.objects, label="Categoria", required =True, empty_label='Seleccione una categoria')  
 
 
         
