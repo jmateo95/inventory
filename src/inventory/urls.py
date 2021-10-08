@@ -18,9 +18,9 @@ from django.urls import path, include
 from inventory.index.views import index, addgraph
 
 from inventory.products.views import modify, modify_order_product, create_category, create_supplier
-from inventory.users.views import adduser, newuser, listuser
+from inventory.users.views import adduser, newuser, listuser, deleteuser
 
-from inventory.products.views import modify, modify_order_product, create_product_type
+from inventory.products.views import modify, modify_order_product, create_product_type, listproduct
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -31,6 +31,9 @@ urlpatterns = [
     path('administrator/adduser/', adduser, name='adduser'),
     path('administrator/newuser/', newuser, name='newuser'),
     path('administrator/listuser/', listuser, name='listuser'),
+    path('administrator/deleteuser/<int:id>/', deleteuser, name='deleteuser'),
+
+    path('manager/listproduct/', listproduct, name='listproduct'),
     
     
     # Paths para las funciones de manager 

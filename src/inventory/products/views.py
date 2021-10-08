@@ -102,4 +102,10 @@ def create_product_type(request):
                 messages.info(request, 'El tipo de producto se creo correctamente!!')
                 return redirect("/") 
     context = {'form': form}        
-    return render(request, "manager/create_product_type.html", context) 
+    return render(request, "manager/create_product_type.html", context)
+
+
+def listproduct(request):
+    products=ProductType.objects.all()
+    context = {'products': products}
+    return render(request, "products/manager/listproducts.html", context)
