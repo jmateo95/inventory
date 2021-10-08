@@ -20,7 +20,7 @@ from inventory.index.views import index, addgraph
 from inventory.products.views import modify, modify_order_product, create_category, create_supplier
 from inventory.users.views import adduser, newuser, listuser, deleteuser
 
-from inventory.products.views import modify, modify_order_product, create_product_type, listproduct
+from inventory.products.views import modify, modify_order_product, create_product_type, list_categories, listproduct
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -40,6 +40,7 @@ urlpatterns = [
     path('manager/form_edit_order/', modify, name='list'),
     path('manager/edit_order/<int:id>/', modify_order_product, name='edit_order'),
     path('manager/create_category/', create_category, name='create_category'),
-    path('manager/create_supplier/', create_supplier, name="create_supplier"),
+    path('manager/create_supplier/', create_supplier, name='create_supplier'),
     path('manager/create_product_type/', create_product_type, name='type_create'),
+    path('manager/list_categories/', list_categories, name='list_categories'),
 ]

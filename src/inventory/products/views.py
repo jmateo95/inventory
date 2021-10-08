@@ -25,7 +25,7 @@ def modify_order_product(request,id):
             'bandera':True
         }
     else:
-        product.reorderpoint = request.POST.get('reorderpoint')
+        product.orderquantity = request.POST.get('reorderpoint')
         product.orderpoint = request.POST.get('orderpoint')
         product.save()
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
@@ -84,8 +84,7 @@ def create_supplier(request):
                 messages.success(request, "Proveedor \"" + request.POST.get('name') + "\" Agregado")
                 return redirect('home')
     return render(request,"manager/form_create_supplier.html",context)
-
-
+    
 def create_product_type(request):
     """Create a product type"""
     if request.method != 'POST':
@@ -109,3 +108,10 @@ def listproduct(request):
     products=ProductType.objects.all()
     context = {'products': products}
     return render(request, "products/manager/listproducts.html", context)
+
+def list_categories(request):
+    categories = Category.objects.all()
+    context = {
+            'categories':categories
+        }
+    return render(request, "manager/list_categories.html", context)
