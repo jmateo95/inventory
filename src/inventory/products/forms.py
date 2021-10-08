@@ -9,30 +9,26 @@ from .models import ProductType
 class ProductForm(forms.ModelForm):
     class Meta:
         model = ProductType
-        fields = {
-            "name": "Nombres",
-            "orderpoint": "Punto de reorden",
-            "orderquantity": "Cantidad de reorden",
-            "quantity": "Cantidad Existente",
-            "category": "Categoria"
-            }
-        widgets = {
-            'name': TextInput(attrs={
-                'title': 'nombre',
-                'name': 'nombre',
-                'class': "form-control",
-                'style': 'max-width: 300px;',
-                'placeholder': 'Nombre'
-                })
-        }
+        fields = '__all__'
+        # widgets = {
+        #     'name': TextInput(attrs={
+        #         'title': 'nombre',
+        #         'name': 'nombre',
+        #         'class': "form-control",
+        #         'style': 'max-width: 300px;',
+        #         'placeholder': 'Nombre'
+        #         })
+        # }
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['orderpoint'].required = False 
-        self.fields['orderquantity'].required = False 
-        self.fields['name']= CharField(label="Nombre", required =True)  
+        self.fields['name']= CharField(label="Nombre", required =True) 
+        self.fields['orderpoint']= CharField(label="Punto De Reorden", required =False) 
+        self.fields['orderquantity']= CharField(label="Cantidad De Reorden", required =False) 
+        self.fields['quantity']= CharField(label="Cantidad Existente", required =True) 
+        self.fields['category']= CharField(label="Categoria", required =True)  
 
 
-        fields = '__all__'
+        
 
 class CategoryForm(forms.ModelForm):
     class Meta:

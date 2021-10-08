@@ -93,12 +93,13 @@ def create_product_type(request):
         form = ProductForm()
     else:
         #POST data submitted
-        if request.POST["cancel"]:
-            return redirect("/") 
-        form = ProductForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            messages.info(request, 'El tipo de producto se creo correctamente!!')
-            return redirect("/") 
+        if "cancel" in request.POST:
+            return redirect("/")
+        else:
+            form = ProductForm(data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.info(request, 'El tipo de producto se creo correctamente!!')
+                return redirect("/") 
     context = {'form': form}        
     return render(request, "manager/create_product_type.html", context) 
