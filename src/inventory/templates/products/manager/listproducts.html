@@ -58,7 +58,7 @@
                             </td>
                             <td>{{ product.category }}</td>
                             <td style="text-align: center;">    
-                                <small style="font-size: 1.5em"><a href="#"><i class="fe-edit" title="Editar"></i></a></small>
+                                <small style="font-size: 1.5em"><a href="{% url 'edit_product' product.id %}"><i class="fe-edit" title="Editar"></i></a></small>
                                 <small style="font-size: 1.5em"><a href="#" title="Eliminar" class="delete" onclick="return confirm('Are you sure you want to delete this item')"><i class="fe-trash-2"></i></a></small>
                             </td>
                         </tr>

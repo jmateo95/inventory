@@ -1,12 +1,11 @@
 {% extends "inventory_base.html" %}
 {% load static i18n %}
+{% load crispy_forms_tags %}
+
 {% block extra_css %}
 {% endblock %}
 
-<!-- Contenido del Form -->
 {% block content %}
-
-{% if bandera %}
 
 <!-- Start Content-->
 <div class="container-fluid">
@@ -16,21 +15,20 @@
         <div class="col-12">
             <div class="page-title-box">
                 <div class="page-title-right">
-                    
+
                 </div>
-                <h4 class="page-title"><i data-feather="edit"></i>  EDITAR</h4>
+                <h4 class="page-title"><i data-feather="edit"></i></i> Editar Producto</h4>
             </div>
         </div>
-    </div>     
-    <!-- end page title --> 
+    </div>
+    <!-- end page title -->
     <!--Body-->
-
 
     <div class="row">
         <div class="col-3"></div>
-        <div class="col-6">
-            <div class="card" style="border-radius: 25px;">
-                <div class="card-body p-4">
+        <div class="col-5">
+            <div class="card" style="border-radius: 15px;">
+                <div class="card-body">
                     <!-- Logo-->
                     <div class="text-center w-75 m-auto">
                         <div class="auth-logo">
@@ -46,9 +44,9 @@
                                 </span>
                             </a>
                         </div>
-                        <p class="text-muted mb-4 mt-3">Producto</p>
+                        <p class="text-muted mb-4 mt-3">Editar Producto</p>
                     </div>
-
+                    <!-- Form -->
                     <form method="post", enctype="multipart/form-data0">
                         {% csrf_token %}
 
@@ -84,7 +82,7 @@
                             
                             <!-- Reorder Point -->
                             <div class="col-md-6">
-                                <label for="lblreorderpoint"  class="form-label">Punto de Reorden*</label>
+                                <label for="lblreorderpoint"  class="form-label">Cantidad a ordenar*</label>
                                 <input class="form-control" name="reorderpoint" id="lblreorderpoint" type="number" min="0" placeholder="Reorder Point" value="{{ product.orderquantity }}"required>
                             </div>
                         </div>
@@ -92,7 +90,7 @@
                             <br>
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Modificar</button>
-                                <a class="btn btn-danger" href="{% url 'list' %}">Regresar</a>
+                                <a class="btn btn-danger" href="{% url 'listproduct' %}">Regresar</a>
                             </div>
                         </center>
                     </form>
@@ -109,40 +107,7 @@
 <!-- container -->
 <br><br><br><br> <br><br><br><br>  <br><br><br><br> 
 
-{% endif %}
-
-
-
-<!-- lista provisonal -->
-<table class="table table-striped table-hover">
-    <thead>
-        <th>Producto</th>
-        <th>Quantity</th>
-        <th>Order Point</th>
-        <th>Reorder Point</th>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td>
-                {{ product.name }}
-            </td>
-            <td>
-                {{ product.quantity }}
-            </td>
-            <td>
-                {{ product.orderpoint }}
-            </td>
-            <td>
-                {{ product.orderquantity }}
-            </td>
-            <td>
-                <a href="{% url 'edit_order' product.id %}">Editar Order</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+{% endblock %}
+{% block extra_javascript %}
 
 {% endblock%}
