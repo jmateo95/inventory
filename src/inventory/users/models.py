@@ -18,3 +18,6 @@ class Rol(models.Model):
 
 class User (AbstractUser):
     rol=models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True, default=1)
+
+    def get_delete_url(self):
+        return 'deleteuser/'+str(self.id)+"/"

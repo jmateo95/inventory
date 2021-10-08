@@ -26,7 +26,7 @@ def newuser(request):
         instance.save()
         emailAddress=EmailAddress.objects.create(email=instance.email, verified=False, primary=True, user=instance)
         emailAddress.save()
-        emailAddress.send_confirmation();
+        emailAddress.send_confirmation()
         messages.success(request, "Se envio un correo al nuevo usuario.")
     else:
         messages.error(request, "Ya existe un usuario con el correo o username.")
@@ -34,7 +34,17 @@ def newuser(request):
 
 
 def listuser(request):
+    users=User.objects.filter(is_active=True)
     context = {
-        'hola' : 'hola',
+        'users' : users,
     }
     return render(request, "administrator/listuser.html", context)
+
+
+def deleteuser(request,id):
+    user=User.objects.filter(id=id).first()
+    if(user):
+        user.is_active=False
+        user.save()
+        messages.success(request, "Usuario: "+user.email+" eliminado exitosamente" )
+    return redirect ('listuser')
