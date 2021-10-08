@@ -26,7 +26,7 @@ class ProductType (models.Model):
     name=models.CharField(max_length=200, unique=True)
     orderpoint=models.IntegerField(null=True)
     orderquantity=models.IntegerField(null=True)
-    quantity=models.IntegerField()
+    quantity=models.IntegerField(default=0)
     category=models.ForeignKey(Category, on_delete=CASCADE, related_name='Category_Products')
 
     def __str__(self):

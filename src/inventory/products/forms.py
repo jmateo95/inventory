@@ -1,15 +1,15 @@
 from django import forms
 from django.forms import fields
 from .models import ProductType, Category, Suplier
-from django.forms import ModelForm, TextInput, EmailInput
+from django.forms import ModelForm, TextInput, EmailInput, ModelChoiceField
 from django.forms.fields import ChoiceField, CharField, IntegerField
-from .models import ProductType
+from .models import ProductType, Category
 
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = ProductType
-        fields = '__all__'
+        exclude = ('quantity',)
         # widgets = {
         #     'name': TextInput(attrs={
         #         'title': 'nombre',
@@ -22,10 +22,9 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['name']= CharField(label="Nombre", required =True) 
-        self.fields['orderpoint']= CharField(label="Punto De Reorden", required =False) 
-        self.fields['orderquantity']= CharField(label="Cantidad De Reorden", required =False) 
-        self.fields['quantity']= CharField(label="Cantidad Existente", required =True) 
-        self.fields['category']= CharField(label="Categoria", required =True)  
+        self.fields['orderpoint']= IntegerField(label="Punto De Reorden", required =False,min_value=0) 
+        self.fields['orderquantity']= IntegerField( label="Cantidad De Reorden", required =False,min_value=0)
+        self.fields['category']= ModelChoiceField(queryset= Category.objects, label="Categoria", required =True)  
 
 
         
