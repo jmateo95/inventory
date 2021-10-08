@@ -31,6 +31,9 @@ class ProductType (models.Model):
 
     def __str__(self):
         return "%s" % (self.name)
+    
+    def get_edit_url(self):
+        return 'edit_product/'+str(self.id)+"/"
 
 
 class SalePrice(models.Model):
