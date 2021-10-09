@@ -19,7 +19,7 @@ from inventory.index.views import index, addgraph
 
 from inventory.products.views import modify_order_product, create_category, create_supplier
 from inventory.users.views import adduser, newuser, listuser, deleteuser
-
+from inventory.clients.views import modal_register_client
 from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,4 +42,7 @@ urlpatterns = [
     path('manager/create_supplier/', create_supplier, name='create_supplier'),
     path('manager/create_product_type/', create_product_type, name='type_create'),
     path('manager/list_categories/', list_categories, name='list_categories'),
+
+    # Paths para el cajero
+    path('cashier/register_client/', modal_register_client, name='register_client'),
 ]

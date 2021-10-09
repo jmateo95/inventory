@@ -144,6 +144,33 @@
 
             {% endif %}
 
+            {% if  user.rol.get_rol == 'Vendedor' %}
+            
+            <ul id="side-cashier">
+                <li class="menu-title">Vendedor</li>
+                <li>
+                    <a href="#sidebarCustomers" data-bs-toggle="collapse">
+                        <i data-feather="users"></i>
+                        <span> Clientes </span>
+                    </a>
+                    <div class="collapse" id="sidebarCustomers">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'register_client' %}">
+                                    <span> Añadir Cliente </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="btn-abrir-popup" href="#">
+                                    <span> Lista de Clientes </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            {% endif %}
 
             <ul id="side-menu">
                 <li class="menu-title">Menu</li>
