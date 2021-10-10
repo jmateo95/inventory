@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from inventory.index.views import index, addgraph
 
-from inventory.products.views import modify_order_product, create_category, create_supplier
+from inventory.products.views import modify_order_product, create_category, create_supplier, product_suppliers
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
 from inventory.clients.views import modal_register_client
 from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct
@@ -43,7 +43,7 @@ urlpatterns = [
     path('manager/create_supplier/', create_supplier, name='create_supplier'),
     path('manager/create_product_type/', create_product_type, name='type_create'),
     path('manager/list_categories/', list_categories, name='list_categories'),
-
+    path('manager/product_suppliers/<int:id>/', product_suppliers, name='product_suppliers'),
     # Paths para el cajero
     path('cashier/register_client/', modal_register_client, name='register_client'),
 ]
