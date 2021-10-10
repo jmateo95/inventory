@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'inventory.common',
     'inventory.users',
     'inventory.products',
+    'inventory.clients',
 ]
 
 SITE_ID = 1
