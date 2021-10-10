@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import fields
-from .models import ProductType, Category, Suplier
+from .models import ProductType, Category, Suplier, ProductSuplier
 from django.forms import ModelForm, TextInput, EmailInput, ModelChoiceField
 from django.forms.fields import ChoiceField, CharField, IntegerField
 from .models import ProductType, Category
@@ -10,15 +10,6 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = ProductType
         exclude = ('quantity',)
-        # widgets = {
-        #     'name': TextInput(attrs={
-        #         'title': 'nombre',
-        #         'name': 'nombre',
-        #         'class': "form-control",
-        #         'style': 'max-width: 300px;',
-        #         'placeholder': 'Nombre'
-        #         })
-        # }
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['name']= CharField(label="Nombre", required =True) 
@@ -26,7 +17,17 @@ class ProductForm(forms.ModelForm):
         self.fields['orderquantity']= IntegerField( label="Cantidad De Reorden", required =False,min_value=0)
         self.fields['category']= ModelChoiceField(queryset= Category.objects, label="Categoria", required =True, empty_label='Seleccione una categoria')  
 
-
+class ProductSupplier(forms.ModelForm):
+    class Meta:
+        model = ProductSuplier
+        fields = ('suplier','producttype')
+    def __init__(self, *args, **kwargs):
+        other_suppliers=kwargs.pop('other_suppliers')
+        producttype=kwargs.pop('producttype')
+        super(ProductSupplier, self).__init__(*args, **kwargs)
+        self.fields['suplier']= ModelChoiceField(queryset=other_suppliers , label="Proveedor", required =True, empty_label='Seleccione un Proveedor')
+        self.fields["producttype"].initial=producttype
+            
         
 
 class CategoryForm(forms.ModelForm):

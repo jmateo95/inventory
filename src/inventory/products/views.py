@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, ProductType, Suplier
-from .forms import ProductForm, CategoryForm, SupplierForm
+from .models import Category, ProductType, Suplier, ProductSuplier
+from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplier
 
 # Create your views here.
 
@@ -103,3 +103,38 @@ def list_categories(request):
             'categories':categories
         }
     return render(request, "manager/list_categories.html", context)
+
+def product_suppliers(request,id):
+    product = ProductType.objects.get(id = id)
+    product_suppliers = Suplier.objects.filter(Suplier_Producttype__producttype=id)
+    other_suppliers= Suplier.objects.exclude(id__in = product_suppliers.values('id'))
+    if request.method != 'POST':
+        
+        form = ProductSupplier(other_suppliers=other_suppliers,producttype=id)
+        
+        
+    else:
+        form = ProductSupplier(data=request.POST,other_suppliers=other_suppliers,producttype=id)
+        
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'El proveedor se enlazo correctamente')
+            return redirect("product_suppliers",id=id)
+        else:
+            messages.info(request, 'No valido')
+    context = { 
+             'product':product,
+             'product_suppliers':product_suppliers,
+             'form':form
+        #     'other_suppliers':other_suppliers 
+            
+        }
+    return render(request,"manager/product_supliers.html",context)    
+     
+    #else:
+        #product.orderquantity = request.POST.get('reorderpoint')
+        #product.orderpoint = request.POST.get('orderpoint')
+        #product.save()
+        #messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
+        #return redirect ('listproduct')
+    
