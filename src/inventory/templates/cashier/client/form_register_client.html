@@ -1,0 +1,83 @@
+{% load static i18n %}
+<!-- Formulario de Registro de Cliente -->
+<!-- Logo-->
+<div class="text-center w-75 m-auto">
+    <div class="auth-logo">
+        <a href="" class="logo logo-dark text-center">
+            <span class="logo-lg">
+                <img src="/static/images/DashTory.png" alt="" height="50">
+            </span>
+        </a>
+
+        <a href="" class="logo logo-light text-center">
+            <span class="logo-lg">
+                <img src="/static/images/DashTory.png" alt="" height="50">
+            </span>
+        </a>
+    </div>
+    <p class="text-muted mb-4 mt-3">Registrar un nuevo Cliente</p>
+</div>
+<!-- Form -->
+{% if success %}
+<!-- Alerta -->
+<div class="alert alert-danger alert-dismissible fade show" style="border-radius: 25px;"  role="alert">
+    Ya existe un cliente registrado con el NIT: <strong>{{ nit_repeat }}</strong>, vuelve a intentarlo.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}  
+<form method="post", enctype="multipart/form-data0">
+    {% csrf_token %}
+
+    <!-- NIT -->
+    <br>
+    <div class="mb-3 row">
+        <label for="lblnit" class="col-sm-2 col-form-label">NIT*:</label>
+        <div class="col-sm-10">
+            <input class="form-control" name="nit" id="lblnit" type="text" pattern="[0-9]+" placeholder="NIT (12345678)" title="Solo Numeros" required>
+            <small>Formato: 12345678</small>
+        </div>
+    </div>
+
+    <!-- Nombre del Cliente -->
+    <div class="mb-3 row">
+        <label for="lblname" class="col-sm-2 col-form-label">Nombre*:</label>
+        <div class="col-sm-10">
+            <input class="form-control" name="name" id="lblname" type="text" placeholder="Nombre" value="{{name_client}}" required>
+        </div>
+    </div>
+
+    <!-- Apellido del Cliente -->
+    <div class="mb-3 row">
+        <label for="lbllast" class="col-sm-2 col-form-label">Apellido:</label>
+        <div class="col-sm-10">
+            <input class="form-control" name="last_name" id="lbllast" type="text" placeholder="Apellido" value="{{last_name_client}}">
+        </div>
+    </div>
+
+    <!-- Direccion -->
+    <div class="mb-3 row">
+        <label for="lbladdress" class="col-sm-2 col-form-label">Direccion:</label>
+        <div class="col-sm-10">
+            <input class="form-control" name="address" id="lbladdress" type="text" placeholder="Direccion" value="{{address_client}}">
+        </div>
+    </div>
+
+    <!-- Telefono -->
+    <div class="mb-3 row">
+        <label for="lblphone" class="col-sm-2 col-form-label">Telefono:</label>
+        
+        <div class="col-sm-10">
+            <input class="form-control" name="phone" id="lblphone" type="tel" pattern="[0-9]{8}" placeholder="Telefono (12345678)" title="Solo Numeros" value="{{phone_client}}"> 
+            <small>Formato: 12345678</small>
+        </div>
+    </div>
+
+    <center>
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Agregar</button>
+            <a class="btn btn-danger" href="{% url 'home' %}">Cancelar</a>
+            <!-- a class="btn btn-danger" href="{% url 'home' %}">Cancelar</a-->
+        </div>
+    </center>
+    
+</form>

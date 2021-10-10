@@ -1,4 +1,4 @@
-#!/home/bryangmz/Documentos/Analisis y Disenio/sistema-inventario/sistema-inventario/bin/python3
+#!/home/bryangmz/Documentos/Analisis y Disenio/sistema-inventario/inventory/sistema-inventario/bin/python3
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

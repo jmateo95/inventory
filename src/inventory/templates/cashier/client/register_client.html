@@ -1,0 +1,50 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+     <!-- start page title -->
+     <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title"><i data-feather="user-plus"></i>  REGISTRAR CLIENTE</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <!-- Formulario de crear Proveedor -->
+            <div class="card" style="border-radius: 25px;">
+                <div class="card-body p-4">
+                    {% include 'cashier/client/form_register_client.html' %}
+                </div>
+            </div>
+
+        </div>
+        
+       
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    $(document).ready(function() {
+        $('#list_categorias').DataTable().addClass("pagination-rounded");
+    } );
+</script>
+{% endblock%}
