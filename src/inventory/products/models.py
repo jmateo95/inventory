@@ -9,7 +9,7 @@ class Category (models.Model):
     def __str__(self):
         return "%s" % (self.name)
     
-class Suplier(models.Model):
+class Supplier(models.Model):
     id=models.AutoField(primary_key=True)
     email=models.CharField(max_length=200, unique=True)
     name=models.CharField(max_length=200)
@@ -43,17 +43,17 @@ class SalePrice(models.Model):
     producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='ProductType_SalesPrice')
 
 
-class ProductSuplier(models.Model):
+class ProductSupplier(models.Model):
     id=models.AutoField(primary_key=True)
-    suplier=models.ForeignKey(Suplier, on_delete=CASCADE, related_name='Suplier_Producttype')
-    producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='Producttype_Suplier')
+    supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Supplier_Producttype')
+    producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='Producttype_Supplier')
 
 class GroupProduct(models.Model):
     upc=models.AutoField(primary_key=True)
     ingressdate=models.DateTimeField(default=now)
     expirationdate=models.DateTimeField()
     quantity=models.IntegerField()
-    suplier=models.ForeignKey(Suplier, on_delete=CASCADE, related_name='Suplier_GropuProducts')
+    supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Supplier_GropuProducts')
 
 
 

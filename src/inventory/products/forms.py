@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import fields
-from .models import ProductType, Category, Suplier, ProductSuplier
+from .models import ProductType, Category, Supplier, ProductSupplier
 from django.forms import ModelForm, TextInput, EmailInput, ModelChoiceField
 from django.forms.fields import ChoiceField, CharField, IntegerField
 from .models import ProductType, Category
@@ -19,13 +19,13 @@ class ProductForm(forms.ModelForm):
 
 class ProductSupplier(forms.ModelForm):
     class Meta:
-        model = ProductSuplier
-        fields = ('suplier','producttype')
+        model = ProductSupplier
+        fields = ('supplier','producttype')
     def __init__(self, *args, **kwargs):
         other_suppliers=kwargs.pop('other_suppliers')
         producttype=kwargs.pop('producttype')
         super(ProductSupplier, self).__init__(*args, **kwargs)
-        self.fields['suplier']= ModelChoiceField(queryset=other_suppliers , label="Proveedor", required =True, empty_label='Seleccione un Proveedor')
+        self.fields['supplier']= ModelChoiceField(queryset=other_suppliers , label="Proveedor", required =True, empty_label='Seleccione un Proveedor')
         self.fields["producttype"].initial=producttype
             
         
@@ -37,7 +37,7 @@ class CategoryForm(forms.ModelForm):
 
 class SupplierForm(forms.ModelForm):
     class Meta:
-        model = Suplier
+        model = Supplier
         fields = '__all__'
 
 

@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, ProductType, Suplier, ProductSuplier
+from .models import Category, ProductType, Supplier, ProductSupplier
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplier
 
 # Create your views here.
@@ -47,7 +47,7 @@ def create_category(request):
 
 def create_supplier(request):
     exist = False
-    suppliers = Suplier.objects.all()
+    suppliers = Supplier.objects.all()
     if request.method == 'GET':
         context = {
             'success':exist
@@ -106,8 +106,8 @@ def list_categories(request):
 
 def product_suppliers(request,id):
     product = ProductType.objects.get(id = id)
-    product_suppliers = Suplier.objects.filter(Suplier_Producttype__producttype=id)
-    other_suppliers= Suplier.objects.exclude(id__in = product_suppliers.values('id'))
+    product_suppliers = Supplier.objects.filter(Supplier_Producttype__producttype=id)
+    other_suppliers= Supplier.objects.exclude(id__in = product_suppliers.values('id'))
     if request.method != 'POST':
         
         form = ProductSupplier(other_suppliers=other_suppliers,producttype=id)
@@ -129,7 +129,7 @@ def product_suppliers(request,id):
         #     'other_suppliers':other_suppliers 
             
         }
-    return render(request,"manager/product_supliers.html",context)    
+    return render(request,"manager/product_suppliers.html",context)    
      
     #else:
         #product.orderquantity = request.POST.get('reorderpoint')
