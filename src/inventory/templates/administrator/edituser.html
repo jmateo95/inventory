@@ -1,0 +1,119 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title"><i data-feather="user-plus"></i>  EDITAR USUARIO</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="card" style="border-radius: 25px;">
+                    <div class="card-body p-4">
+                        <!-- Logo-->
+                        <div class="text-center w-75 m-auto">
+                          <div class="auth-logo">
+                            <a href="" class="logo logo-dark text-center">
+                                <span class="logo-lg">
+                                    <img src="/static/images/DashTory.png" alt="" height="50">
+                                </span>
+                            </a>
+                
+                            <a href="" class="logo logo-light text-center">
+                                <span class="logo-lg">
+                                    <img src="/static/images/DashTory.png" alt="" height="50">
+                                </span>
+                            </a>
+                          </div>
+                          <p class="text-muted mb-4 mt-3">Editando al Usuario</p>
+                      </div>
+                        <form method="POST", enctype="multipart/form-data">
+                            {% csrf_token %}                                                
+                            <div id="div_id_email" class="mb-3"> <label for="id_email" class="form-label">Email address</label> 
+                                <input type="email" name="email" maxlength="254" class="emailinput form-control" id="id_email" value="{{ user.email }}"> 
+                            </div> 
+                            <div id="div_id_username" class="mb-3"> <label for="id_username" class="form-label requiredField">Username<span class="asteriskField">*</span> </label> 
+                                <input type="text" name="username" maxlength="150" class="textinput textInput form-control" required id="id_username" value="{{ user.username }}"> <small id="hint_id_username" class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                            </div> 
+                            <div id="div_id_rol" class="mb-3"> <label for="id_rol" class="form-label requiredField">Rol<span class="asteriskField">*</span> </label>
+                                <select name="rol" class="select form-select" required id="id_rol"> 
+                                    {% for rol in roles %} 
+                                        {% if user.rol.id == rol.id %}
+                                            <option value="{{ rol.id }}" selected>{{ rol.rol }}</option> 
+                                        {% else%}
+                                            <option value="{{ rol.id }}">{{ rol.rol }}</option> 
+                                        {% endif %}
+                                    {% endfor %}
+                                </select> 
+                            </div> 
+                            <br>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div style="text-align:initial;">
+                                        <a href="{% url 'listuser' %}" class="btn btn-danger">Cancelar</a>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div style="text-align: end;">
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+
+{% endblock%}
