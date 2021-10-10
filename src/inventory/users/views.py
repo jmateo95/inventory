@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from inventory.users.forms import UsersForm
 from django.http.response import HttpResponseRedirect
-from inventory.users.models import User
+from inventory.users.models import Rol, User
 from django.contrib.auth.hashers import make_password
 from allauth.account.models import EmailAddress
 # Create your views here.
@@ -48,3 +48,30 @@ def deleteuser(request,id):
         user.save()
         messages.success(request, "Usuario: "+user.email+" eliminado exitosamente" )
     return redirect ('listuser')
+
+
+def edituser(request,id):
+    user=User.objects.filter(id=id).first()
+    roles=Rol.objects.all()
+
+    if(user):
+        if request.method == 'GET':
+            context = {
+                'user':user,
+                'roles':roles
+            }
+            return render(request, "administrator/edituser.html", context)        
+        else:
+            try:
+                user.email = request.POST.get('email')
+                user.username = request.POST.get('username')
+                user.rol_id= request.POST.get('rol')
+                user.save()
+                messages.success(request, "El Usuario se modifico correctamente")
+                return redirect ('listuser')
+            except:
+                messages.error(request, "Correo o User Name ya existentes")
+                return redirect ('listuser')
+    else:
+        messages.error(request, "El usuario no existe" )
+        return redirect ('listuser')
