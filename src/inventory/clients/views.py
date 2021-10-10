@@ -29,7 +29,6 @@ def modal_register_client(request):
             }
         else:
             client = ClientForm(request.POST)
-            print(client)
             if client.is_valid():
                 client.save()
                 messages.success(request, "Cliente \"" + request.POST.get('name') + "\" Agregado")
