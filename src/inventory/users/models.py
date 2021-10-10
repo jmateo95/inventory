@@ -21,3 +21,6 @@ class User (AbstractUser):
 
     def get_delete_url(self):
         return 'deleteuser/'+str(self.id)+"/"
+
+    def get_edit_url(self):
+        return 'edituser/'+str(self.id)+"/"
