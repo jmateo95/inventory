@@ -137,4 +137,12 @@ def suppliers(request):
     context = {
             'suppliers':suppliers
         }
-    return render(request, "manager/suppliers.html", context)    
+    return render(request, "manager/suppliers.html", context)   
+
+def deletesupplier(request,id):
+    supplier=Supplier.objects.filter(id=id).first()
+    if(supplier):
+        name = supplier.name
+        supplier.delete()
+        messages.success(request, "Proveedor "+name+" eliminado exitosamente" )
+    return redirect ('suppliers') 

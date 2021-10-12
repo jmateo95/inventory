@@ -45,7 +45,7 @@ urlpatterns = [
     path('manager/list_categories/', list_categories, name='list_categories'),
     path('manager/product_suppliers/<int:id>/', product_suppliers, name='product_suppliers'),
     path('manager/suppliers/', suppliers, name='suppliers'),
-    
+    path('manager/deletesupplier/<int:id>/', deletesupplier, name='deletesupplier'),
     # Paths para el cajero
     path('cashier/register_client/', modal_register_client, name='register_client'),
 ]

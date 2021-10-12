@@ -16,7 +16,7 @@
                 <div class="page-title-right">
 
                 </div>
-                <h4 class="page-title"><i data-feather="truck"></i> Proveedores Para {{product.name}}</h4>
+                <h4 class="page-title"><i data-feather="truck"></i> Proveedores</h4>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                            
                                 <small style="font-size: 1.5em"><a href=""
                                     title="Enlazar Producto"><i data-feather="package" title="Enlazar Producto"></i></a></small>&nbsp
-                                <small style="font-size: 1.5em"><a href="" title="Eliminar" class="delete" onclick="
+                                <small style="font-size: 1.5em"><a href="{% url 'deletesupplier' supplier.id %}" title="Eliminar" class="delete" onclick="
                                     return confirm('Seguro que deseas eliminar a este proveedor')"><i class="fe-trash-2"></i></a></small>      
 
                             </td>
