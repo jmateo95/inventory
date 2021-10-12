@@ -38,7 +38,7 @@
                             <th>Correo</th>
                             <th>Telefono</th>
                             <th>Direccion</th>
-                            <th style="width: 6em; text-align: center;">Acciones</th>
+                            <th style="width: 9em; text-align: center;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,13 +50,12 @@
                             <td>{{ supplier.address }}</td>
 
                             <td style="text-align: center;">
-
-                                <!-- <small style="font-size: 1.5em"><a href="{% url 'manual_order' supplier.id %}" -->
-                                <small style="font-size: 1.5em"><a 
-                                        title="Ordenar"><i data-feather="file-plus" title="Ordenar"></i></a></small>nbsp
-                                <small style="font-size: 1.5em"><a 
-                                    title="Enlazar Producto"><i data-feather="file-plus" title="Enlazar Producto"></i></a></small>nbsp
-                                <small style="font-size: 1.5em"><a title="Eliminar" class="delete" onclick="
+                                <small style="font-size: 1.5em"><a href=""
+                                    title="Ordenar"><i data-feather="file-plus" title="Ordenar"></i></a></small>&nbsp
+                           
+                                <small style="font-size: 1.5em"><a href=""
+                                    title="Enlazar Producto"><i data-feather="package" title="Enlazar Producto"></i></a></small>&nbsp
+                                <small style="font-size: 1.5em"><a href="" title="Eliminar" class="delete" onclick="
                                     return confirm('Seguro que deseas eliminar a este proveedor')"><i class="fe-trash-2"></i></a></small>      
 
                             </td>
