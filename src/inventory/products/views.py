@@ -131,10 +131,10 @@ def product_suppliers(request,id):
         }
     return render(request,"manager/product_suppliers.html",context)    
      
-    #else:
-        #product.orderquantity = request.POST.get('reorderpoint')
-        #product.orderpoint = request.POST.get('orderpoint')
-        #product.save()
-        #messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
-        #return redirect ('listproduct')
-    
+
+def suppliers(request):
+    suppliers = Supplier.objects.all()
+    context = {
+            'suppliers':suppliers
+        }
+    return render(request, "manager/suppliers.html", context)    
