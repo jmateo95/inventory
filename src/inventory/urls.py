@@ -20,7 +20,7 @@ from inventory.index.views import index, addgraph
 from inventory.products.views import modify_order_product, create_category, create_supplier, product_suppliers
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
 from inventory.clients.views import modal_register_client
-from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct
+from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, manual_purchase
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -35,7 +35,7 @@ urlpatterns = [
     path('administrator/edituser/<int:id>/', edituser, name='edituser'),
 
     path('manager/listproduct/', listproduct, name='listproduct'),
-    
+    path('manager/manual_purchase/<int:id>/', manual_purchase, name='manual_purchase'),
     
     # Paths para las funciones de manager 
     path('manager/edit_product/<int:id>/', modify_order_product, name='edit_product'),
