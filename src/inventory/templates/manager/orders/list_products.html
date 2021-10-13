@@ -1,0 +1,208 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title"><i data-feather="list"></i> Lista de pedido al proveedor: {{ supplier.name }}</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+     <!-- Modal -->
+     <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductlLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="addProductLabel">Agregar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Form -->
+            <form method="post", enctype="multipart/form-data0">
+                <div class="modal-body">
+                    {% csrf_token %}
+                        <div class="row">
+                            <center>
+                                <h4><b> Producto </b> </h4>
+                            </center>
+                        </div>
+                        <br>
+                        <!-- Product -->
+                        <div class="row">
+                            <!-- ID Product -->
+                            <div class="col-md-6">
+                                <input class="form-control" id="id_product" name="id_product" type="text" readonly required>
+                                <small>ID Producto*</small>
+                            </div>
+                            
+                            <!-- Product -->
+                            <div class="col-md-6">
+                                <input class="form-control" id="product" name="product" type="text" readonly required>
+                                <small>Producto*</small>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Catidad a ordenar -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lblquantity">Cantidad a ordenar*:</label>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <input class="form-control" name="quantity" id="quantity" type="number" min="1" placeholder="Cantidad" pattern="[0-9]+" title="Solo Numeros" required>
+                                <small>Formato: [0-9]+</small>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <center>
+                                <h4><b> Lista de productos </b> </h4>
+                            </center>
+                        </div>
+                        <br>
+                        <!-- Tabla -->
+                        <table id="list_product" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                    <th>Existencia</th>
+                                    <th>Categoria</th>
+                                    <th style="width: 6em; text-align: center;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>
+                                        {% if product.quantity > orderpoint %}
+                                            <span class="badge bg-soft-success text-success" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>
+                                        {% else %}
+                                            <span class="badge bg-soft-danger text-danger" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ product.category }}</td>
+                                    <td style="text-align: center;">    
+                                        <small style="font-size: 1.5em"><a href="#" title="Seleccionar" onclick="display('{{ product.id }}', '{{ product.name }}')"><i data-feather="check-circle" title="ProSeleccionarveedores"></i></a></small>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+        
+                            </tbody>
+                        </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" onclick="clean()">Limpiar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <!-- Fin modal -->
+
+    <div class="row" style="padding-left: 3em; padding-right: 3em;">
+        <div class="card" style="border-radius: 25px;">
+            <div class="card-body p-4">
+
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <!-- Modal -->
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addProduct">
+                            Agregar producto
+                        </button>
+                    
+                        <!-- Modal -->
+                        <!-- Button trigger modal -->
+                        <a class="btn btn-outline-primary" href="{% url 'send_order_email' %}">
+                            Enviar Pedido
+                        </a>
+                </div>
+
+                <div class="row">
+                    <center>
+                        <h2><b>Lista de productos </b> </h2>
+                    </center>
+                </div>
+                
+
+                <br>
+                <div class="row">
+                    <h4><b>Pedido: No. </b> {{ order_id }}</h4>
+                </div>
+                <br>
+                    <!-- Tablas -->
+                    <table id="list_product_order" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Producto</th>
+                                <th>Cantidad Solicitada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order_product in order_products %}
+                            <tr>
+                                <td>{{ order_product.producttype.id }}</td>
+                                <td>{{ order_product.producttype.name }}</td>
+                                <td>{{ order_product.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+    
+                        </tbody>
+                    </table>
+
+            </div>
+        </div>        
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    $(document).ready( function() {
+        $('#list_product').DataTable().addClass("pagination-rounded");
+    } );
+    $("#input").val("Test")
+</script>
+<script>
+    $(document).ready( function() {
+        $('#list_product_order').DataTable().addClass("pagination-rounded");
+    } );
+    $("#input").val("Test")
+</script>
+<script>
+    function display(id, name) {
+        document.getElementById("id_product").value = id;
+        document.getElementById("product").value = name;
+    }
+    function clean() {
+        document.getElementById("id_product").value = '';
+        document.getElementById("product").value = '';
+        document.getElementById("quantity").value = '';
+    }
+</script>
+{% endblock%}

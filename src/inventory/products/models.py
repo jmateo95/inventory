@@ -55,12 +55,14 @@ class GroupProduct(models.Model):
     quantity=models.IntegerField()
     supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Supplier_GropuProducts')
 
+class Order(models.Model):
+    id=models.AutoField(primary_key=True)
+    orderdate=models.DateTimeField(default=now)
+    state=models.CharField(max_length=200, default='No Enviado')
+    supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Order_Supplier')
 
-
-
-
-
-
-
-
-
+class Order_Products(models.Model):
+    id=models.AutoField(primary_key=True)
+    quantity=models.IntegerField()
+    producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='Order_Producttype')
+    numberoforder=models.ForeignKey(Order, on_delete=CASCADE, related_name='Number_Order')

@@ -1,8 +1,13 @@
+from django import template
+from django.db.models import manager
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, ProductType, Supplier, ProductSupplier
+from .models import Category, ProductType, Supplier, ProductSupplier, Order, Order_Products
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplier
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 # Create your views here.
 
@@ -138,3 +143,77 @@ def product_suppliers(request,id):
         #messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         #return redirect ('listproduct')
     
+def list_products_supplier(request, id):
+    supplier = Supplier.objects.get(id=id)
+    product_suppliers = ProductType.objects.filter(Producttype_Supplier__supplier=id)
+    if(request.method == 'GET'):
+        order = Order()
+        order.supplier = supplier
+        order.save()
+        order = Order.objects.order_by('-id')[0]
+        request.session['id_order']=order.id
+        context = {
+            'products':product_suppliers,
+            'supplier':supplier,
+            'order_id':order.id
+        }
+    else:
+        order = Order.objects.get(id=request.session['id_order'])
+        product = ProductType.objects.get(id=request.POST.get('id_product'))
+        order_product = Order_Products()
+        order_product.quantity = request.POST.get('quantity')
+        order_product.producttype = product
+        order_product.numberoforder = order
+        order_product.save()
+        list_order_product = Order_Products.objects.filter(numberoforder_id=order.id)
+        #send_email(quantity, id_product, product, supplier.email, supplier.name)
+        #messages.success('Correo enviado con los productos solicitados')
+        #return redirect('list_suppliers')
+        context = {
+            'products':product_suppliers,
+            'supplier':supplier,
+            'order_id':request.session['id_order'],
+            'order_products':list_order_product
+        }
+    return render(request, "manager/orders/list_products.html", context)
+
+def send_order_email(request):
+    order = Order.objects.get(id=request.session['id_order'])
+    order_products = Order_Products.objects.filter(numberoforder_id=order.id)
+    context = {
+        'supplier':order.supplier,
+        'order_products':order_products,
+        'numberoforder':order.id,
+        'date':order.orderdate
+    }
+    template = get_template('manager/orders/email_manual_order.html')
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Pedido de Productos',
+        'Realizacion de pedido, de la empresa Dashtory',
+        settings.EMAIL_HOST_USER,
+        [order.supplier.email]
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    messages.success(request, 'Correo enviado con los productos solicitados')
+    return redirect('list_suppliers')
+
+def send_email(quantity, id, name, mail, supplier):
+    context = {'supplier':supplier}
+    template = get_template('manager/orders/email_manual_order.html')
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Pedido de Productos',
+        'Realizacion de pedido, de la empresa Dashtory',
+        settings.EMAIL_HOST_USER,
+        [mail]
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+
+#provisional    
+def list_suppliers(request):
+    products=Supplier.objects.all()
+    context = {'suppliers': products}
+    return render(request,"manager/supplier/list_suppliers.html", context)
