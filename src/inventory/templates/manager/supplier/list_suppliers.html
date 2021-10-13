@@ -1,0 +1,72 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title"><i data-feather="user"></i> LISTA DE PROVEEDORES</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+
+    <div class="row" style="padding-left: 3em; padding-right: 3em;">
+        <div class="card" style="border-radius: 25px;">
+            <div class="card-body p-4">
+
+                <table id="list_supplier" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Correo Electrónico</th>
+                            <th>Proveedor</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th style="width: 6em; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for supplier in suppliers %}
+                        <tr>
+                            <td>{{ supplier.email }}</td>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.address }}</td>
+                            <td>{{ supplier.phone }}</td>
+                            <td style="text-align: center;">    
+                                <small style="font-size: 1.5em"><a href="{% url 'manual_order' supplier.id %}"title="Realizar Pedido" ><i data-feather="clipboard" title="Realizar Pedido"></i></a></small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>        
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    $(document).ready(function() {
+        $('#list_supplier').DataTable().addClass("pagination-rounded");
+    } );
+</script>
+
+{% endblock%}
