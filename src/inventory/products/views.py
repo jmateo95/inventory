@@ -211,9 +211,3 @@ def send_email(quantity, id, name, mail, supplier):
     )
     email.attach_alternative(content, 'text/html')
     email.send()
-
-#provisional    
-def list_suppliers(request):
-    products=Supplier.objects.all()
-    context = {'suppliers': products}
-    return render(request,"manager/supplier/list_suppliers.html", context)

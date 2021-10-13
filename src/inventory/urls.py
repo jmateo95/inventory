@@ -44,7 +44,6 @@ urlpatterns = [
     path('manager/create_product_type/', create_product_type, name='type_create'),
     path('manager/list_categories/', list_categories, name='list_categories'),
     path('manager/product_suppliers/<int:id>/', product_suppliers, name='product_suppliers'),
-    path('manager/list_supplier/', list_suppliers, name='list_suppliers'),
     path('manager/manual_order/<int:id>/', list_products_supplier, name='manual_order'),
     path('manager/send_order_email/', send_order_email, name='send_order_email'),
     # Paths para el cajero
