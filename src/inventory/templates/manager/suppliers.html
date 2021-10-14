@@ -50,7 +50,7 @@
                             <td>{{ supplier.address }}</td>
 
                             <td style="text-align: center;">
-                                <small style="font-size: 1.5em"><a href=""
+                                <small style="font-size: 1.5em"><a href="{% url 'manual_order' supplier.id %}"
                                     title="Ordenar"><i data-feather="file-plus" title="Ordenar"></i></a></small>&nbsp
                            
                                 <small style="font-size: 1.5em"><a href="{% url 'supplier_products' supplier.id %}"
