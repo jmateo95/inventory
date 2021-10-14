@@ -23,7 +23,7 @@ def modify_order_product(request,id):
 
 
 def manual_purchase(request,id):
-    #try:
+    try:
         product = ProductType.objects.get(id = id)
         if request.method == 'GET':
             suppliers=Supplier.objects.filter(Supplier_Producttype__producttype=product)
@@ -42,7 +42,7 @@ def manual_purchase(request,id):
                 messages.error(request, "Existio un error en la cantidad por favor intentelo de nuevo")
             return redirect ('listproduct')
         return render(request,"products/manager/manual_purchase.html",context)
-    #except:
+    except:
         messages.error(request, "El producto seleccionado no existe")
         return redirect('listproduct')
 
