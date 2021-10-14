@@ -2,8 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
 from .models import Category, ProductType, Supplier, ProductSupplier
-from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplier
-
+from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 def modify_order_product(request,id):
@@ -108,13 +108,14 @@ def product_suppliers(request,id):
     product = ProductType.objects.get(id = id)
     product_suppliers = Supplier.objects.filter(Supplier_Producttype__producttype=id)
     other_suppliers= Supplier.objects.exclude(id__in = product_suppliers.values('id'))
+    aux=1
     if request.method != 'POST':
         
-        form = ProductSupplier(other_suppliers=other_suppliers,producttype=id)
+        form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
         
         
     else:
-        form = ProductSupplier(data=request.POST,other_suppliers=other_suppliers,producttype=id)
+        form = ProductSupplierForm(data=request.POST,other_suppliers=other_suppliers,producttype=id,aux=aux)
         
         if form.is_valid():
             form.save()
@@ -126,7 +127,6 @@ def product_suppliers(request,id):
              'product':product,
              'product_suppliers':product_suppliers,
              'form':form
-        #     'other_suppliers':other_suppliers 
             
         }
     return render(request,"manager/product_suppliers.html",context)    
@@ -145,4 +145,36 @@ def deletesupplier(request,id):
         name = supplier.name
         supplier.delete()
         messages.success(request, "Proveedor "+name+" eliminado exitosamente" )
-    return redirect ('suppliers') 
+    return redirect ('suppliers')
+
+def deleteproductsupplier(request,id,id2):
+    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2)
+    if(productsupplier):
+        productsupplier.delete()
+        messages.success(request, "Enlace eliminado exitosamente" )
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def supplier_products(request,id):
+    supplier = Supplier.objects.get(id = id)
+    supplier_products = ProductType.objects.filter(Producttype_Supplier__supplier=id)
+    other_producttypes= ProductType.objects.exclude(id__in = supplier_products.values('id'))
+    aux=0
+    if request.method != 'POST':
+        
+        form = ProductSupplierForm(other_producttypes=other_producttypes,supplier=id,aux=aux)   
+    else:
+        form = ProductSupplierForm(data=request.POST,other_producttypes=other_producttypes,supplier=id,aux=aux)
+        
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'El producto se enlazo correctamente')
+            return redirect("supplier_products",id=id)
+        else:
+            messages.info(request, 'No valido')
+    context = { 
+             'supplier':supplier,
+             'supplier_products':supplier_products,
+             'form':form
+            
+        }
+    return render(request,"manager/supplier_products.html",context)   

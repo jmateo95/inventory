@@ -53,7 +53,7 @@
                                 <small style="font-size: 1.5em"><a href=""
                                     title="Ordenar"><i data-feather="file-plus" title="Ordenar"></i></a></small>&nbsp
                            
-                                <small style="font-size: 1.5em"><a href=""
+                                <small style="font-size: 1.5em"><a href="{% url 'supplier_products' supplier.id %}"
                                     title="Enlazar Producto"><i data-feather="package" title="Enlazar Producto"></i></a></small>&nbsp
                                 <small style="font-size: 1.5em"><a href="{% url 'deletesupplier' supplier.id %}" title="Eliminar" class="delete" onclick="
                                     return confirm('Seguro que deseas eliminar a este proveedor')"><i class="fe-trash-2"></i></a></small>      
