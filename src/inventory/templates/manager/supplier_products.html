@@ -1,6 +1,7 @@
 {% extends "inventory_base.html" %}
 {% load static i18n %}
 {% load crispy_forms_tags %}
+
 {% block extra_css %}
 {% endblock %}
 
@@ -15,7 +16,7 @@
                 <div class="page-title-right">
 
                 </div>
-                <h4 class="page-title"><i data-feather="truck"></i> Proveedores Para {{product.name}}</h4>
+                <h4 class="page-title"><i data-feather="truck"></i> Productos Para {{supplier.name}}</h4>
             </div>
         </div>
     </div>
@@ -24,7 +25,7 @@
 
 
     <div class="row">
-        <div class="col-4" style="padding-left: 2em; padding-right: 1em;">
+        <div class="col-4" style="padding-left: 3em;">
             <div class="card" style="border-radius: 25px;">
                 <div class="card-body p-4">
                     <!-- Logo-->
@@ -42,15 +43,15 @@
                                 </span>
                             </a>
                         </div>
-                        <p class="text-muted mb-4 mt-3">Agregar un proveedor</p>
+                        <p class="text-muted mb-4 mt-3">Agregar un producto</p>
                     </div>
                        
                     <!-- Form -->
                     <form method="post", enctype="multipart/form-data0">
                         {% csrf_token %}
                         <!-- {{form | crispy}} -->
-                        {{ form.supplier|as_crispy_field }}
-                        {{ form.producttype.as_hidden }}
+                        {{ form.producttype|as_crispy_field }}
+                        {{ form.supplier.as_hidden }}
                         <center>
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Agregar</button>
@@ -62,36 +63,32 @@
                 </div>
             </div>
         </div>
-        <div class="col-7" style="padding-left: 1em; padding-right: 1em;">
-            <div class="card" style="border-radius: 15px;">
+        <div class="col-7" style="padding-left: 3em; padding-right: 3em;">
+            <div class="card" style="border-radius: 25px;">
                 <div class="card-body p-4"> 
-                    <h3 style="text-align: center;">Proveedores</h3>
+                    <h3 style="text-align: center;">Productos</h3>
                     <table id="supplier_list"class="table table-striped table-hover" style="width:100%">
                         <thead>
                             <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Telefono</th>
-                            <th>Direccion</th>
+                            <th>Punto de Reorden</th>
+                            <th>Cantidad por Orden</th>
                             <th></th>
                         </thead>
                         <tbody>
-                            {% for supplier in product_suppliers %}
+                            {% for products in supplier_products %}
                             <tr>
                                 <td>
-                                    {{ supplier.name }}
+                                    {{ products.name }}
                                 </td>
                                 <td>
-                                    {{ supplier.email }}
+                                    {{ products.orderpoint }}
                                 </td>
                                 <td>
-                                    {{ supplier.phone }}
-                                </td>
-                                <td>
-                                    {{ supplier.address }}
+                                    {{ products.orderquantity }}
                                 </td>
                                 <td>
                                     
-                                    <small style="font-size: 1.5em"><a href="{% url 'deleteproductsupplier' supplier.id product.id%}" title="Eliminar" class="delete" onclick="
+                                    <small style="font-size: 1.5em"><a href="{% url 'deleteproductsupplier' supplier.id products.id%}" title="Eliminar" class="delete" onclick="
                                         return confirm('Seguro que deseas eliminar a este proveedor para el producto')"><i class="fe-trash-2"></i></a></small>      
     
                                 </td>

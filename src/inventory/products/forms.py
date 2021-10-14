@@ -17,18 +17,41 @@ class ProductForm(forms.ModelForm):
         self.fields['orderquantity']= IntegerField( label="Cantidad De Reorden", required =False,min_value=0)
         self.fields['category']= ModelChoiceField(queryset= Category.objects, label="Categoria", required =True, empty_label='Seleccione una categoria')  
 
-class ProductSupplier(forms.ModelForm):
+class ProductSupplierForm(forms.ModelForm):
     class Meta:
         model = ProductSupplier
         fields = ('supplier','producttype')
     def __init__(self, *args, **kwargs):
-        other_suppliers=kwargs.pop('other_suppliers')
-        producttype=kwargs.pop('producttype')
-        super(ProductSupplier, self).__init__(*args, **kwargs)
-        self.fields['supplier']= ModelChoiceField(queryset=other_suppliers , label="Proveedor", required =True, empty_label='Seleccione un Proveedor')
-        self.fields["producttype"].initial=producttype
-            
+        aux=kwargs.pop('aux')
+        if aux==0:
+            other_producttypes=kwargs.pop('other_producttypes')
+            supplier=kwargs.pop('supplier')
+        else:
+            producttype=kwargs.pop('producttype')
+            other_suppliers=kwargs.pop('other_suppliers')
         
+        super(ProductSupplierForm, self).__init__(*args, **kwargs)
+        if aux==1:
+        
+            self.fields['supplier']= ModelChoiceField(queryset=other_suppliers , label="Proveedor", required =True, empty_label='Seleccione un Proveedor')
+            self.fields["producttype"].initial=producttype
+        else:    
+            self.fields['supplier'].initial=supplier
+            self.fields["producttype"]= ModelChoiceField(queryset=other_producttypes , label="Producto", required =True, empty_label='Seleccione un Producto')
+          
+     
+# class SupplierProduct(forms.ModelForm):
+#     class Meta:
+#         #model = ProductSupplier
+#         fields = ('supplier','producttype')
+#     def __init__(self, *args, **kwargs):
+#         other_producttypes=kwargs.pop('other_producttypes')
+#         supplier=kwargs.pop('supplier')
+#         super(SupplierProduct, self).__init__(*args, **kwargs)
+#         self.fields['supplier'].initial=supplier
+#         self.fields["producttype"]= ModelChoiceField(queryset=other_producttypes , label="Producto", required =True, empty_label='Seleccione un Producto')
+            
+              
 
 class CategoryForm(forms.ModelForm):
     class Meta:
