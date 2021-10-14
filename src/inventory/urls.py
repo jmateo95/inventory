@@ -20,7 +20,7 @@ from inventory.index.views import index, addgraph
 from inventory.products.views import modify_order_product, create_category, create_supplier, product_suppliers
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
 from inventory.clients.views import modal_register_client
-from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, list_suppliers, list_products_supplier, send_order_email
+from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, list_products_supplier, send_order_email
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),

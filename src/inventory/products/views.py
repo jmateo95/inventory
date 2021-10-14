@@ -197,7 +197,7 @@ def send_order_email(request):
     email.attach_alternative(content, 'text/html')
     email.send()
     messages.success(request, 'Correo enviado con los productos solicitados')
-    return redirect('list_suppliers')
+    return redirect('home')
 
 def send_email(quantity, id, name, mail, supplier):
     context = {'supplier':supplier}
