@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, ProductType, Supplier, ProductSupplier
+from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.http import HttpResponseRedirect
 
