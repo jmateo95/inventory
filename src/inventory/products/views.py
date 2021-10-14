@@ -1,9 +1,11 @@
+from datetime import datetime
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
 from .models import Category, ProductType, Supplier, ProductSupplier
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.http import HttpResponseRedirect
+
 # Create your views here.
 
 def modify_order_product(request,id):
@@ -19,6 +21,35 @@ def modify_order_product(request,id):
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('listproduct')
     return render(request,"manager/form_edit_orders.html",context)
+
+
+def manual_purchase(request,id):
+    try:
+        product = ProductType.objects.get(id = id)
+        if request.method == 'GET':
+            suppliers=Supplier.objects.filter(Supplier_Producttype__producttype=product)
+            context = {
+                'suppliers':suppliers,
+                'product':product,    
+            }
+        else:
+            if(int(request.POST.get('quantity')) > 0):
+                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=int(request.POST.get('quantity')), supplier_id=request.POST.get('supplier'))
+                newproduct.save()
+                product.quantity=product.quantity+newproduct.quantity
+                product.save()
+                messages.success(request, "Se ingreso la cantidad correctamente")
+            else:
+                messages.error(request, "Existio un error en la cantidad por favor intentelo de nuevo")
+            return redirect ('listproduct')
+        return render(request,"products/manager/manual_purchase.html",context)
+    except:
+        messages.error(request, "El producto seleccionado no existe")
+        return redirect('listproduct')
+
+
+
+
 
 def create_category(request):
     categories = Category.objects.all()
@@ -110,10 +141,8 @@ def product_suppliers(request,id):
     other_suppliers= Supplier.objects.exclude(id__in = product_suppliers.values('id'))
     aux=1
     if request.method != 'POST':
-        
         form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
-        
-        
+
     else:
         form = ProductSupplierForm(data=request.POST,other_suppliers=other_suppliers,producttype=id,aux=aux)
         

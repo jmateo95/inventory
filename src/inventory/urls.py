@@ -35,7 +35,7 @@ urlpatterns = [
     path('administrator/edituser/<int:id>/', edituser, name='edituser'),
 
     path('manager/listproduct/', listproduct, name='listproduct'),
-    
+    path('manager/manual_purchase/<int:id>/', manual_purchase, name='manual_purchase'),
     
     # Paths para las funciones de manager 
     path('manager/edit_product/<int:id>/', modify_order_product, name='edit_product'),
