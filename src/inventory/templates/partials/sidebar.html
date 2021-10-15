@@ -140,6 +140,22 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <!-- Area de Pedidos -->
+                    <a href="#sidebarManagerOrder" data-bs-toggle="collapse">
+                        <i data-feather="clipboard"></i>
+                        <span> Pedidos </span>
+                    </a>
+                    <div class="collapse" id="sidebarManagerOrder">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'list_orders' %}">
+                                    <span> Lista de Pedidos </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
 
             {% endif %}

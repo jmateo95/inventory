@@ -1,0 +1,94 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title"><i data-feather="list"></i> Lista de productos</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+    <div class="row" style="padding-left: 3em; padding-right: 3em;">
+        <div class="card" style="border-radius: 25px;">
+            <div class="card-body p-4">
+
+                <div class="row">
+                    <center>
+                        <h2><b>Detalle de productos solicitados a: <b>{{ supplier }}</b></b> </h2>
+                    </center>
+                </div>
+                
+
+                <br>
+                <div class="row">
+                    <h4><b>Pedido: No. </b> {{ id_order }}</h4>
+                </div>
+                <div class="row">
+                    <h4><b>Fecha: </b> {{ date }}</h4>
+                </div>
+                <div class="row">
+                    <h4><b>Estado: </b> 
+                        {% if state == "No Completado" %}
+                            <span class="badge bg-soft-secondary text-secondary" style="font-size: 0.85em"><b>{{ state  }}</b></span>
+                        {% elif state == "En Proceso" %}
+                            <span class="badge bg-soft-info text-info" style="font-size: 0.85em"><b>{{ state  }}</b></span>
+                        {% elif state == "Enviado" %}
+                            <span class="badge bg-soft-warning text-warning" style="font-size: 0.85em"><b>{{ state  }}</b></span>
+                        {% elif state == "Procesado" %}
+                            <span class="badge bg-soft-success text-success" style="font-size: 0.85em"><b>{{ state  }}</b></span>
+                        {% else %}
+                            <span class="badge bg-soft-danger text-danger" style="font-size: 0.85em"><b>{{ state  }}</b></span>
+                        {% endif %}</h4>
+                </div>
+                <br>
+                    <!-- Tablas -->
+                    <table id="list_product_order" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Producto</th>
+                                <th>Cantidad Solicitada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order_product in order_products %}
+                            <tr>
+                                <td>{{ order_product.producttype.id }}</td>
+                                <td>{{ order_product.producttype.name }}</td>
+                                <td>{{ order_product.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+    
+                        </tbody>
+                    </table>
+
+            </div>
+        </div>        
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    $(document).ready( function() {
+        $('#list_product_order').DataTable().addClass("pagination-rounded");
+    } );
+    $("#input").val("Test")
+</script>
+{% endblock%}

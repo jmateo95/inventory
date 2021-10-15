@@ -315,3 +315,26 @@ def validation_order(request, key, id):
         else: 
             context = {'messages':"Numero de pedido invalido"}
     return render(request,"manager/orders/messages_confirm.html",context) 
+
+def list_orders(request):
+    orders = Order.objects.all()
+    context = {
+            'orders':orders
+        }
+    return render(request, "manager/orders/list_orders.html", context)   
+
+def details_of_order(request, id):
+    try:
+        order = Order.objects.get(id=id)
+    except:
+        messages.error(request,"Numero de pedido invalido")
+        return redirect("list_orders")
+    orders_products = Order_Products.objects.filter(numberoforder_id=id)
+    context = {
+        'id_order':id,
+        'supplier':order.supplier.name,
+        'order_products':orders_products,
+        'state':order.state,
+        'date':order.orderdate
+    }
+    return render(request, "manager/orders/detail_order.html",context)
