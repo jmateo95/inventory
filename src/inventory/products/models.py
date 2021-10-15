@@ -58,7 +58,8 @@ class GroupProduct(models.Model):
 class Order(models.Model):
     id=models.AutoField(primary_key=True)
     orderdate=models.DateTimeField(default=now)
-    state=models.CharField(max_length=200, default='No Enviado')
+    state=models.CharField(max_length=200, default='No Completado')
+    validation_key=models.CharField(max_length=200)
     supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Order_Supplier')
 
 class Order_Products(models.Model):

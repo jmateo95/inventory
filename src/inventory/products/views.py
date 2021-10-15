@@ -7,9 +7,10 @@ from inventory import products
 from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier, Order, Order_Products
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.template.loader import get_template
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, message
 from django.conf import settings
 from django.http import HttpResponseRedirect
+import uuid
 
 # Create your views here.
 
@@ -171,6 +172,7 @@ def list_products_supplier(request, id):
     if(request.method == 'GET'):
         order = Order()
         order.supplier = supplier
+        order.validation_key = uuid.uuid4()
         order.save()
         order = Order.objects.order_by('-id')[0]
         request.session['id_order']=order.id
@@ -181,16 +183,25 @@ def list_products_supplier(request, id):
         }
     else:
         order = Order.objects.get(id=request.session['id_order'])
-        product = ProductType.objects.get(id=request.POST.get('id_product'))
-        order_product = Order_Products()
-        order_product.quantity = request.POST.get('quantity')
-        order_product.producttype = product
-        order_product.numberoforder = order
-        order_product.save()
+        if(int(request.POST.get('quantity')) <= 0):
+            messages.error(request,'Debes de ingresar un numero mayor a 0')
+        else:
+            if (request.POST.get('id_product')):
+                product = ProductType.objects.get(id=request.POST.get('id_product'))
+                order_product = Order_Products.objects.filter(numberoforder_id=order.id).filter(producttype_id=product.id)
+                if (order_product.count() == 1):
+                    for op in order_product:
+                        op.quantity = op.quantity + int(request.POST.get('quantity'))
+                        op.save()
+                else:
+                    order_product = Order_Products()
+                    order_product.quantity = request.POST.get('quantity')
+                    order_product.producttype = product
+                    order_product.numberoforder = order
+                    order_product.save()
+            else:
+                messages.error(request,'Debes de seleccionar un producto')
         list_order_product = Order_Products.objects.filter(numberoforder_id=order.id)
-        #send_email(quantity, id_product, product, supplier.email, supplier.name)
-        #messages.success('Correo enviado con los productos solicitados')
-        #return redirect('list_suppliers')
         context = {
             'products':product_suppliers,
             'supplier':supplier,
@@ -202,11 +213,17 @@ def list_products_supplier(request, id):
 def send_order_email(request):
     order = Order.objects.get(id=request.session['id_order'])
     order_products = Order_Products.objects.filter(numberoforder_id=order.id)
+    if (order_products.count() <= 0):
+        messages.error(request, 'Correo no enviado al proveedor: ' + order.supplier.name + ', debido a que no se adjuntaron productos al pedido.')
+        order.delete()
+        del request.session['id_order']
+        return redirect('suppliers')
     context = {
         'supplier':order.supplier,
         'order_products':order_products,
         'numberoforder':order.id,
-        'date':order.orderdate
+        'date':order.orderdate,
+        'validation_key':order.validation_key
     }
     template = get_template('manager/orders/email_manual_order.html')
     content = template.render(context)
@@ -218,21 +235,16 @@ def send_order_email(request):
     )
     email.attach_alternative(content, 'text/html')
     email.send()
-    messages.success(request, 'Correo enviado con los productos solicitados')
-    return redirect('home')
+    messages.success(request, 'Correo enviado al proveedor: ' + order.supplier.name + ', con los productos solicitados.')
+    del request.session['id_order']
+    return redirect('suppliers')
 
-def send_email(quantity, id, name, mail, supplier):
-    context = {'supplier':supplier}
-    template = get_template('manager/orders/email_manual_order.html')
-    content = template.render(context)
-    email = EmailMultiAlternatives(
-        'Pedido de Productos',
-        'Realizacion de pedido, de la empresa Dashtory',
-        settings.EMAIL_HOST_USER,
-        [mail]
-    )
-    email.attach_alternative(content, 'text/html')
-    email.send()
+def btn_cancel_an_order(request, id):
+    order = Order.objects.get(id=id)
+    order.delete()
+    del request.session['id_order']
+    return redirect('suppliers')
+
 
 def suppliers(request):
     suppliers = Supplier.objects.all()
@@ -280,3 +292,6 @@ def supplier_products(request,id):
             
         }
     return render(request,"manager/supplier_products.html",context)   
+
+def validation_order(request, key, id):
+    return redirect('home')
