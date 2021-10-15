@@ -235,6 +235,8 @@ def send_order_email(request):
     )
     email.attach_alternative(content, 'text/html')
     email.send()
+    order.state = "Enviado"
+    order.save()
     messages.success(request, 'Correo enviado al proveedor: ' + order.supplier.name + ', con los productos solicitados.')
     del request.session['id_order']
     return redirect('suppliers')
@@ -294,4 +296,22 @@ def supplier_products(request,id):
     return render(request,"manager/supplier_products.html",context)   
 
 def validation_order(request, key, id):
-    return redirect('home')
+    try:
+        order = Order.objects.get(id=id)
+    except:
+        context = {'messages':"Numero de pedido, invalido."}
+        return render(request,"manager/orders/messages_confirm.html",context) 
+    if(request.method == 'GET'):
+        if (order):
+            if(order.validation_key == key):
+                if(order.state == "En Proceso"):
+                    context = {'messages':"Este enlace ya fue utilizado, y se confirmo la entrega."}
+                else:
+                    order.state = "En Proceso"
+                    order.save()
+                    context = {'messages':"Confirmacion de entrega de producto aceptada"}
+            else:
+                context = {'messages':"Llave de validacion incorrecta"}
+        else: 
+            context = {'messages':"Numero de pedido invalido"}
+    return render(request,"manager/orders/messages_confirm.html",context) 
