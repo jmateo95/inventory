@@ -40,39 +40,6 @@
                     {% csrf_token %}
                         <div class="row">
                             <center>
-                                <h4><b> Producto </b> </h4>
-                            </center>
-                        </div>
-                        <br>
-                        <!-- Product -->
-                        <div class="row">
-                            <!-- ID Product -->
-                            <div class="col-md-6">
-                                <input class="form-control" id="id_product" name="id_product" type="text" readonly required>
-                                <small>ID Producto*</small>
-                            </div>
-                            
-                            <!-- Product -->
-                            <div class="col-md-6">
-                                <input class="form-control" id="product" name="product" type="text" readonly required>
-                                <small>Producto*</small>
-                            </div>
-                        </div>
-                        <br>
-                        <!-- Catidad a ordenar -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="lblquantity">Cantidad a ordenar*:</label>
-                            </div>
-                            
-                            <div class="col-sm-6">
-                                <input class="form-control" name="quantity" id="quantity" type="number" min="1" placeholder="Cantidad" pattern="[0-9]+" title="Solo Numeros" required>
-                                <small>Formato: [0-9]+</small>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <center>
                                 <h4><b> Lista de productos </b> </h4>
                             </center>
                         </div>
@@ -110,6 +77,39 @@
         
                             </tbody>
                         </table>
+                        <br>
+                        <div class="row">
+                            <center>
+                                <h4><b> Producto </b> </h4>
+                            </center>
+                        </div>
+                        <br>
+                        <!-- Product -->
+                        <div class="row">
+                            <!-- ID Product -->
+                            <div class="col-md-6">
+                                <input class="form-control" id="id_product" name="id_product" type="text" readonly required>
+                                <small>ID Producto*</small>
+                            </div>
+                            
+                            <!-- Product -->
+                            <div class="col-md-6">
+                                <input class="form-control" id="product" name="product" type="text" readonly required>
+                                <small>Producto*</small>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Catidad a ordenar -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lblquantity">Cantidad a ordenar*:</label>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <input class="form-control" name="quantity" id="quantity" type="number" min="1" placeholder="Cantidad" pattern="[0-9]+" title="Solo Numeros" required>
+                                <small>Formato: [0-9]+</small>
+                            </div>
+                        </div>
 
                 </div>
                 <div class="modal-footer">
