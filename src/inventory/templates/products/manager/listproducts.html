@@ -39,7 +39,7 @@
                             <th>Productos a Ordenar</th>
                             <th>Existencia</th>
                             <th>Categoria</th>
-                            <th style="width: 8em; text-align: center;">Acciones</th>
+                            <th style="width: 10em; text-align: center;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +58,10 @@
                             </td>
                             <td>{{ product.category }}</td>
                             <td style="text-align: center;">
-                                <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'manual_purchase' product.id %}" title="Abastecer" ><i data-feather="archive" title="Proveedores"></i></a></small>   
-                                <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'edit_product' product.id %}"><i class="fe-edit" title="Editar"></i></a></small>
-                                <small style="font-size: 1.5em"><a href="{% url 'product_suppliers' product.id %}" title="Proveedores" ><i data-feather="truck" title="Proveedores"></i></a></small>
+                                <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'product_suppliers' product.id %}" title="Añadir Proveedor" ><i data-feather="truck" title="Añadir Proveedor"></i></a></small>
+                                <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'manual_purchase' product.id %}" title="Abastecer" ><i data-feather="archive" title="Abastecer"></i></a></small>   
+                                <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'list_lot' product.id %}" title="Lotes del producto" ><i data-feather="layers" title="Lotes del producto"></i></a></small>
+                                <small style="font-size: 1.5em;"><a href="{% url 'edit_product' product.id %}"><i class="fe-edit" title="Editar Producto"></i></a></small>
                             </td>
                         </tr>
                         {% endfor %}
