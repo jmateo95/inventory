@@ -140,10 +140,13 @@ def listlot(request, id):
 
     if request.method == 'POST':
         updatelote=GroupProduct.objects.get(upc=request.POST.get('upc'))
+        oldquantity=updatelote.quantity
+        newquantity=int(request.POST.get('quantity'))
+        product.quantity=product.quantity-oldquantity+newquantity
         updatelote.quantity=int(request.POST.get('quantity'))
         updatelote.save()
+        product.save()
         messages.success(request, 'La cantidad del lote se actualizo')
-        
     context = {
         'product': product,
         'productsg': productsg,
