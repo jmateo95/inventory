@@ -31,7 +31,7 @@
 
 
 
-                <table id="list_product" class="table table-striped table-bordered" style="width:100%">
+                <table id="suppliers_list" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -76,5 +76,9 @@
 <!-- container -->
 {% endblock %}
 {% block extra_javascript %}
-
+<script>
+    $(document).ready(function() {
+        $('#suppliers_list').DataTable().addClass("pagination-rounded");
+    } );
+</script>
 {% endblock%}

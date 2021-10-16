@@ -142,8 +142,8 @@ def list_categories(request):
 
 def product_suppliers(request,id):
     product = ProductType.objects.get(id = id)
-    product_suppliers = Supplier.objects.filter(Supplier_Producttype__producttype=id)
-    other_suppliers= Supplier.objects.exclude(id__in = product_suppliers.values('id'))
+    product_suppliers = Supplier.objects.filter(Supplier_Producttype__producttype=id,active=True)
+    other_suppliers= Supplier.objects.exclude(id__in = product_suppliers.values('id')).filter(active=True)
     aux=1
     if request.method != 'POST':
         form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
@@ -166,7 +166,7 @@ def product_suppliers(request,id):
     return render(request,"manager/product_suppliers.html",context)    
     
 def list_products_supplier(request, id):
-    supplier = Supplier.objects.get(id=id)
+    supplier = Supplier.objects.get(id=id,active=True)
     product_suppliers = ProductType.objects.filter(Producttype_Supplier__supplier=id)
     if(request.method == 'GET'):
         order = Order()
@@ -235,7 +235,7 @@ def send_email(quantity, id, name, mail, supplier):
     email.send()
 
 def suppliers(request):
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.filter(active=True)
     context = {
             'suppliers':suppliers
         }
@@ -250,14 +250,14 @@ def deletesupplier(request,id):
     return redirect ('suppliers')
 
 def deleteproductsupplier(request,id,id2):
-    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2)
+    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2,active=True)
     if(productsupplier):
         productsupplier.delete()
         messages.success(request, "Enlace eliminado exitosamente" )
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def supplier_products(request,id):
-    supplier = Supplier.objects.get(id = id)
+    supplier = Supplier.objects.get(id = id,active=True)
     supplier_products = ProductType.objects.filter(Producttype_Supplier__supplier=id)
     other_producttypes= ProductType.objects.exclude(id__in = supplier_products.values('id'))
     aux=0
