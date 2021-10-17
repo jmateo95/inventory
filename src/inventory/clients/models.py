@@ -27,4 +27,4 @@ class ProductSale(models.Model):
     product=models.ForeignKey(GroupProduct,on_delete=CASCADE, related_name='Sale_Cashier')
     sale=models.ForeignKey(Sale,on_delete=CASCADE, related_name='ProductSale_Sale')
     quantity=models.IntegerField(default = 1)
-    total=models.DecimalField(max_digits=8, decimal_places=2)   
+    total=models.DecimalField(max_digits=8, decimal_places=2)

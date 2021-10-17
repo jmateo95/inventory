@@ -19,8 +19,7 @@ from inventory.index.views import index, addgraph
 
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
-from inventory.clients.views import modal_register_client
-from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, list_products_supplier, send_order_email,  manual_purchase
+from inventory.clients.views import modal_register_client, register_sale, autocomplete_client
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -52,4 +51,7 @@ urlpatterns = [
     path('manager/deleteproductsupplier/<int:id>/<int:id2>/', deleteproductsupplier, name='deleteproductsupplier'),
     # Paths para el cajero
     path('cashier/register_client/', modal_register_client, name='register_client'),
+    path('cashier/register_sale/', register_sale, name='register_sale'),
+    path('api/autocomplete_client/', autocomplete_client, name='autocomplete_client')
 ]
+

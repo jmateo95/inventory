@@ -1,0 +1,105 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+
+                </div>
+                <h4 class="page-title">Venta</h4>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+    <!--Body-->
+
+
+    <div class="row" style="padding-left: 2em; padding-right: 2em;">
+        <div class="card" style="border-radius: 25px;">
+            <div class="card-body p-4">
+                <!--Logo-->
+                <div class="text-center w-60 m-auto">
+                    <div class="auth-logo">
+                        <a href="" class="logo logo-dark text-center">
+                            <span class="logo-lg">
+                                <img src="/static/images/DashTory.png" alt="" height="50">
+                            </span>
+                        </a>
+
+                        <a href="" class="logo logo-light text-center">
+                            <span class="logo-lg">
+                                <img src="/static/images/DashTory.png" alt="" height="50">
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <form method="post" , enctype="multipart/form-data0">
+                    {% csrf_token %}
+                    <div class="ui-widget">
+                        <label for="client_nit">NIT: </label>
+                        <input type="text" name="client_nit" id="client_nit" value="C/F">
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div id="lhs" style="">
+                                    <label>Nombre: </label>
+                                    <label>-----</label>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div id="rhs1">
+                                    <label>Telefono: </label>
+                                    <label>------</label>
+                                </div>
+                                <div id="rhs2">
+                                    Right hand side Down
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!--End Body-->
+
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<!-- jQuery !-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
+<!-- jQuery UI !-->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+    $(function () {
+        $("#client_nit").autocomplete({
+            source: "{% url 'autocomplete_client' %}",
+            minLength: 2
+        });
+    });
+</script>
+{% endblock%}
