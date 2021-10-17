@@ -1,0 +1,104 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    
+                </div>
+                <h4 class="page-title">DASHBOARD ADMINISTRATIVO</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+
+    <div class="row">
+        <div class="col-4">
+            <div class="card" style="border-radius: 2em;">
+                <div class="card-body">
+                    <div id="main" style="width: auto;height:400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+
+
+<script type="text/javascript">
+    // Initialize the echarts instance based on the prepared dom
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // Specify the configuration items and data for the chart
+    var option = {
+      
+        title: {
+            text: 'Ventas del Mes'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['Ventas']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            show: true,
+            feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            dataView: { readOnly: false },
+            magicType: { type: ['line', 'bar'] },
+            restore: {},
+            saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['1', '2', '3', '4', '5', '6', '7']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+            name: 'Ventas',
+            type: 'line',
+            stack: 'Total',
+            data: [120, 132, 101, 134, 90, 230, 210]
+            }
+        ]
+
+
+    };
+
+    // Display the chart using the configuration items and data just specified.
+    myChart.setOption(option);
+  </script>
+
+{% endblock%}
