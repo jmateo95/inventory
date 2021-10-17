@@ -39,17 +39,6 @@ class ProductSupplierForm(forms.ModelForm):
             self.fields['supplier'].initial=supplier
             self.fields["producttype"]= ModelChoiceField(queryset=other_producttypes , label="Producto", required =True, empty_label='Seleccione un Producto')
           
-     
-# class SupplierProduct(forms.ModelForm):
-#     class Meta:
-#         #model = ProductSupplier
-#         fields = ('supplier','producttype')
-#     def __init__(self, *args, **kwargs):
-#         other_producttypes=kwargs.pop('other_producttypes')
-#         supplier=kwargs.pop('supplier')
-#         super(SupplierProduct, self).__init__(*args, **kwargs)
-#         self.fields['supplier'].initial=supplier
-#         self.fields["producttype"]= ModelChoiceField(queryset=other_producttypes , label="Producto", required =True, empty_label='Seleccione un Producto')
             
               
 
@@ -62,5 +51,4 @@ class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
         fields = '__all__'
-
 

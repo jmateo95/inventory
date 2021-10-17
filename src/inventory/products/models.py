@@ -13,6 +13,7 @@ class Supplier(models.Model):
     id=models.AutoField(primary_key=True)
     email=models.CharField(max_length=200, unique=True)
     name=models.CharField(max_length=200)
+    active =models.BooleanField(default=True)
     address=models.CharField(max_length=200)
     phone=models.CharField(max_length=20)
 

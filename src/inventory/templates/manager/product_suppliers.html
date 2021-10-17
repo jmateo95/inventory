@@ -111,5 +111,9 @@
 <!-- container -->
 {% endblock %}
 {% block extra_javascript %}
-
+<script>
+    $(document).ready(function() {
+        $('#supplier_list').DataTable().addClass("pagination-rounded");
+    } );
+</script>
 {% endblock%}
