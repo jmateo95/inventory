@@ -54,6 +54,7 @@ class GroupProduct(models.Model):
     ingressdate=models.DateTimeField(default=now)
     expirationdate=models.DateTimeField()
     quantity=models.IntegerField()
+    producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='ProductType_GropuProducts')
     supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Supplier_GropuProducts')
 
 class Order(models.Model):

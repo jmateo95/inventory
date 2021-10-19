@@ -40,7 +40,7 @@ def manual_purchase(request,id):
             }
         else:
             if(int(request.POST.get('quantity')) > 0):
-                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=int(request.POST.get('quantity')), supplier_id=request.POST.get('supplier'))
+                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=int(request.POST.get('quantity')), supplier_id=request.POST.get('supplier'), producttype_id=id)
                 newproduct.save()
                 product.quantity=product.quantity+newproduct.quantity
                 product.save()
@@ -136,6 +136,27 @@ def listproduct(request):
     products=ProductType.objects.all()
     context = {'products': products}
     return render(request, "products/manager/listproducts.html", context)
+
+
+def listlot(request, id):
+    productsg=GroupProduct.objects.filter(producttype_id=id, quantity__gt=0)
+    product=ProductType.objects.get(id=id)
+
+    if request.method == 'POST':
+        updatelote=GroupProduct.objects.get(upc=request.POST.get('upc'))
+        oldquantity=updatelote.quantity
+        newquantity=int(request.POST.get('quantity'))
+        product.quantity=product.quantity-oldquantity+newquantity
+        updatelote.quantity=int(request.POST.get('quantity'))
+        updatelote.save()
+        product.save()
+        messages.success(request, 'La cantidad del lote se actualizo')
+    context = {
+        'product': product,
+        'productsg': productsg,
+        }
+    return render(request, "products/manager/listlot.html", context)
+
 
 def list_categories(request):
     categories = Category.objects.all()

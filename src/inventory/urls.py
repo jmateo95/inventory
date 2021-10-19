@@ -20,7 +20,8 @@ from inventory.index.views import index, addgraph
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
 from inventory.clients.views import modal_register_client
-from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, list_products_supplier, send_order_email, manual_purchase, btn_cancel_an_order, validation_order, list_orders, details_of_order
+from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, listlot, list_products_supplier, send_order_email, manual_purchase, btn_cancel_an_order, validation_order, list_orders, details_of_order
+from inventory.dashboard.views import dashboard
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -33,9 +34,15 @@ urlpatterns = [
     path('administrator/listuser/', listuser, name='listuser'),
     path('administrator/deleteuser/<int:id>/', deleteuser, name='deleteuser'),
     path('administrator/edituser/<int:id>/', edituser, name='edituser'),
+    path('administrator/dashboard/', dashboard, name='dashboard'),
+
 
     path('manager/listproduct/', listproduct, name='listproduct'),
     path('manager/manual_purchase/<int:id>/', manual_purchase, name='manual_purchase'),
+
+    path('manager/listlot/<int:id>/', listlot, name='list_lot'),
+
+
     
     # Paths para las funciones de manager 
     path('manager/edit_product/<int:id>/', modify_order_product, name='edit_product'),
