@@ -19,7 +19,7 @@ from inventory.index.views import index, addgraph
 
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
-from inventory.clients.views import modal_register_client, register_sale, autocomplete_client
+from inventory.clients.views import modal_register_client, register_sale, autocomplete_client, autocomplete_upc
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -52,6 +52,7 @@ urlpatterns = [
     # Paths para el cajero
     path('cashier/register_client/', modal_register_client, name='register_client'),
     path('cashier/register_sale/', register_sale, name='register_sale'),
-    path('api/autocomplete_client/', autocomplete_client, name='autocomplete_client')
+    path('api/autocomplete_client/', autocomplete_client, name='autocomplete_client'),
+    path('api/autocomplete_upc/', autocomplete_upc, name='autocomplete_upc')
 ]
 

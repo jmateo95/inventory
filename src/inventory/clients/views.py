@@ -77,3 +77,14 @@ def autocomplete_client(request):
         data = json.dumps(titles)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
+
+def autocomplete_upc(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        products = ProductType.objects.filter(upc__icontains=query)
+        titles = list()
+        for product in products:
+            titles.append(product.nit)
+        data = json.dumps(titles)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
