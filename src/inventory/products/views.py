@@ -106,8 +106,11 @@ def create_supplier(request):
             supplier = SupplierForm(request.POST)
             if supplier.is_valid():
                 supplier.save()
+                supplier = Supplier.objects.order_by('-id')[0]
+                supplier.active = True
+                supplier.save()
                 messages.success(request, "Proveedor \"" + request.POST.get('name') + "\" Agregado")
-                return redirect('home')
+                return redirect('suppliers')
     return render(request,"manager/form_create_supplier.html",context)
     
 def create_product_type(request):
