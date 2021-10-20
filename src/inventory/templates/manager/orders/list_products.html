@@ -61,7 +61,7 @@
                                     <td>{{ product.id }}</td>
                                     <td>{{ product.name }}</td>
                                     <td>
-                                        {% if product.quantity > orderpoint %}
+                                        {% if product.quantity > product.orderpoint %}
                                             <span class="badge bg-soft-success text-success" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>
                                         {% else %}
                                             <span class="badge bg-soft-danger text-danger" style="font-size: 0.85em"><b>{{ product.quantity }}</b></span>

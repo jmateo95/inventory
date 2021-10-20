@@ -67,5 +67,6 @@ class Order(models.Model):
 class Order_Products(models.Model):
     id=models.AutoField(primary_key=True)
     quantity=models.IntegerField()
+    date=models.DateTimeField(null=True)
     producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='Order_Producttype')
     numberoforder=models.ForeignKey(Order, on_delete=CASCADE, related_name='Number_Order')
