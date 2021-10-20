@@ -14,7 +14,7 @@
         <div class="col-12">
             <div class="page-title-box">
                 <div class="page-title-right">
-                    
+                    <a href="{% url 'list_orders'%}" class="btn btn-outline-dark" style="border-radius: 2em;"><i data-feather="skip-back"></i>Atras</a>
                 </div>
                 <h4 class="page-title"><i data-feather="list"></i> Lista de productos</h4>
             </div>
@@ -22,6 +22,78 @@
     </div>     
     <!-- end page title --> 
     <!--Body-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductlLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="addProductLabel">Ingresar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Form -->
+            <form method="post", enctype="multipart/form-data0">
+                <div class="modal-body">
+                    {% csrf_token %}
+                        <!--Order_product -->
+                        <br>
+                        <div class="row">
+                            <center>
+                                <h4><b> Producto </b> </h4>
+                            </center>
+                        </div>
+                        <br>
+                        <!-- Product -->
+                        <div class="row">
+                            <!-- ID Product -->
+                            <div class="col-md-6">
+                                <small><b>ID Producto</b></small>
+                                <input class="form-control" id="id_product" name="id_product" type="text" readonly required>
+                                
+                            </div>
+                            
+                            <!-- Product -->
+                            <div class="col-md-6">
+                                <small><b>Producto</b></small>
+                                <input class="form-control" id="id_name" name="name" type="text" readonly required>
+                                
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <!-- Proveedor  -->
+                            <div class="col-md-6">
+                                <small><b>Proveedor</b></small>
+                                <input class="form-control" id="id_supplier" name="supplier" type="text" readonly required>
+                                
+                            </div>
+                            
+                            <!-- Cantidad -->
+                            <div class="col-md-6">
+                                <small><b>Cantidad</b></small>
+                                <input class="form-control" id="id_quantity" name="quantity" type="text" readonly required>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Fecha de expiracion -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lblexpirationdate"  class="form-label">Fecha de Expiración*</label>
+                                <input class="form-control" id="id_date" name="expirationdate" id="lblexpirationdate"  type="date" placeholder="31/12/2021" required>
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <!-- Fin modal -->
 
     <div class="row" style="padding-left: 3em; padding-right: 3em;">
         <div class="card" style="border-radius: 25px;">
@@ -63,6 +135,9 @@
                                 <th>Id</th>
                                 <th>Producto</th>
                                 <th>Cantidad Solicitada</th>
+                                {% if state == "En Proceso" or state == "Procesado" %}
+                                <th>Fecha de Ingreso</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -71,9 +146,21 @@
                                 <td>{{ order_product.producttype.id }}</td>
                                 <td>{{ order_product.producttype.name }}</td>
                                 <td>{{ order_product.quantity }}</td>
+                                 {% if state == "En Proceso" or state == "Procesado" %}
+
+                                    {% if order_product.date == None %}
+                                    <td style="text-align: center;">
+                                        <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="#" title="Ingresar" onclick="display('{{ order_product.producttype.id }}', '{{ order_product.producttype.name }}', '{{ supplier }}', '{{ order_product.quantity }}' )"  data-bs-toggle="modal" data-bs-target="#addProduct"><i data-feather="arrow-up-circle" title="Ingresar"></i></a></small>   
+                                    </td>
+                                    {% else %}
+                                    <td> 
+                                        {{ order_product.date }}
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
                             </tr>
                             {% endfor %}
-    
+                           
                         </tbody>
                     </table>
 
@@ -90,5 +177,14 @@
         $('#list_product_order').DataTable().addClass("pagination-rounded");
     } );
     $("#input").val("Test")
+</script>
+<script>
+    function display(id, name, supplier, quantity) {
+        document.getElementById("id_product").value = id;
+        document.getElementById("id_name").value = name;
+        document.getElementById("id_supplier").value = supplier;
+        document.getElementById("id_quantity").value = quantity;
+        document.getElementById("id_date").value = "";
+    }
 </script>
 {% endblock%}

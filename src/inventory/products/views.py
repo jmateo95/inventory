@@ -288,7 +288,7 @@ def deletesupplier(request,id):
     return redirect ('suppliers')
 
 def deleteproductsupplier(request,id,id2):
-    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2,active=True)
+    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2)
     if(productsupplier):
         productsupplier.delete()
         messages.success(request, "Enlace eliminado exitosamente" )
@@ -354,11 +354,40 @@ def details_of_order(request, id):
         messages.error(request,"Numero de pedido invalido")
         return redirect("list_orders")
     orders_products = Order_Products.objects.filter(numberoforder_id=id)
-    context = {
-        'id_order':id,
-        'supplier':order.supplier.name,
-        'order_products':orders_products,
-        'state':order.state,
-        'date':order.orderdate
-    }
+    if request.method == 'GET':
+        context = {
+            'id_order':id,
+            'supplier':order.supplier.name,
+            'order_products':orders_products,
+            'state':order.state,
+            'date':order.orderdate
+        }
+    else: 
+        try:
+            product = ProductType.objects.get(id = request.POST.get('id_product'))
+            order_product = Order_Products.objects.get(numberoforder_id=id,producttype_id=product.id)
+            order_product.date = datetime.now()
+            order_product.save()
+            if(int(request.POST.get('quantity')) > 0):
+                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=order_product.quantity, supplier_id=order_product.numberoforder.supplier.id, producttype_id=order_product.producttype.id)
+                newproduct.save()
+                product.quantity=product.quantity+newproduct.quantity
+                product.save()
+                check_products = Order_Products.objects.filter(numberoforder_id=id).filter(date=None).count()
+                if check_products == 0 and order.state == "En Proceso":
+                    order.state = "Procesado"
+                    order.save()
+                messages.success(request, "Se ingreso la cantidad correctamente")
+            else:
+                messages.error(request, "Existio un error en la cantidad por favor intentelo de nuevo")
+        except:
+            messages.error(request, "El producto seleccionado no existe")
+        context = {
+                'id_order':id,
+                'supplier':order.supplier.name,
+                'order_products':orders_products,
+                'state':order.state,
+                'date':order.orderdate
+            }
     return render(request, "manager/orders/detail_order.html",context)
+
