@@ -28,7 +28,7 @@
         <div class="col-4">
             <div class="card" style="border-radius: 2em;">
                 <div class="card-body">
-                    <div id="main" style="width: auto;height:400px;"></div>
+                    <div id="id_0" style="width: auto;height:400px;"></div>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
 {% block extra_javascript %}
 
 
-<script type="text/javascript">
+<!--script type="text/javascript">
     // Initialize the echarts instance based on the prepared dom
     var myChart = echarts.init(document.getElementById('main'));
 
@@ -99,6 +99,20 @@
 
     // Display the chart using the configuration items and data just specified.
     myChart.setOption(option);
-  </script>
+  </script-->
+
+  <!-- Enviar Charts-->
+<script>
+    var options = ("{{options|escapejs}}");
+    var names = ("{{names|escapejs}}");
+    const objOptions = JSON.parse(options);
+    const objNames = JSON.parse(names);
+    for (var i = 0; i < objNames.length; i++) {
+        var chartDom = document.getElementById(objNames[i]);
+        var myChart = echarts.init(chartDom);
+        const obj = JSON.parse(objOptions[i]);
+        myChart.setOption(obj);
+    }
+</script>
 
 {% endblock%}
