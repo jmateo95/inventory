@@ -30,6 +30,7 @@
             <div class="widget-rounded-circle card" style="height: 10em; border-radius: 2em;">
                 <div class="card-body">
                     <div style="width: content-box; height: 9.0em; margin-top: 0.3em;">
+                        {% if most_product %}
                         <div class="row">
                                 <h5 style="text-align: right;">Producto mas vendido: {{ most_product.product__producttype__name }}</h5>
                             <div class="col-4">
@@ -42,6 +43,7 @@
                             </div>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
