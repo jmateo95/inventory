@@ -64,6 +64,11 @@
                         {% endfor %}
                         {% endif %}
                         {{ form | crispy }}
+                        <div id="div_precio" class="mb-3">
+                            <label class="form-label requiredField">Precio <span class="asteriskField">*</span></label>
+                            <input type="number" name="price" id="price" requiered="" class="numberinput form-control"required name="price" min="0" value="0" step="0.1">
+                        </div>
+
                         <br>
 
                         <div style="text-align: end;">

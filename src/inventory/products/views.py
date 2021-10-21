@@ -4,7 +4,7 @@ from django.db.models import manager
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier, Order, Order_Products
+from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier, Order, Order_Products,SalePrice
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives, message
@@ -16,13 +16,19 @@ import uuid
 
 def modify_order_product(request,id):
     product = ProductType.objects.get(id = id)
+    precio=SalePrice.objects.filter(producttype=product).order_by('-channgeddate').first().price
     if request.method == 'GET':
         context = {
-            'product':product,    
+            'product':product, 
+            'precio':precio,   
         }
     else:
         product.orderquantity = request.POST.get('reorderpoint')
         product.orderpoint = request.POST.get('orderpoint')
+        nuevo_precio=request.POST.get('precio')
+        if(str(precio)!=str(nuevo_precio)):
+            price=SalePrice(channgeddate = datetime.now(),price=nuevo_precio,producttype=product)
+            price.save()
         product.save()
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('listproduct')
@@ -120,7 +126,10 @@ def create_product_type(request):
         else:
             form = ProductForm(data=request.POST)
             if form.is_valid():
-                form.save()
+                ob=form.save()
+                price=SalePrice(channgeddate = datetime.now(),price=request.POST.get("price"),producttype=ob)
+                price.save()
+                
                 messages.info(request, 'El tipo de producto se creo correctamente!!')
                 return redirect("/") 
     context = {'form': form}        
