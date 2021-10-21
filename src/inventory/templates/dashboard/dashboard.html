@@ -36,6 +36,7 @@
                             </div>
                             <div class="col-8">
                             <div class="text-end">
+                                {% if most_product %}
                                 <div class="row">
                                     <div class="col">
                                         <h3>{{ most_product.product__producttype__name }}</h3>
@@ -45,6 +46,7 @@
                                     </div>
                                 </div>
                                 <p class="text-muted mb-1 text-truncate">Ganancias: {{ most_product.total }}</p>
+                                {% endif %}
                             </div>
                             </div>
                         </div>
