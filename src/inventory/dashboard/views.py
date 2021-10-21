@@ -3,7 +3,7 @@ from django.shortcuts import render
 from datetime import datetime
 from django.db.models import Sum
 import json
-from inventory.clients.models import Sale
+from inventory.clients.models import ProductSale, Sale
 
 # Create your views here.
 def FirstDayOfMonth():
@@ -19,14 +19,26 @@ def serialize(objects, name):
 
 def sales_month(firstdayofmonth):
     ventas=Sale.objects.extra(select={'dia':'EXTRACT(DAY FROM datetime)', 'total':'total'}).filter(datetime__gte=firstdayofmonth).values('datetime__day').annotate(total=Sum('total')).order_by('datetime__day')
+    #print('.........')
+    #print(str(ventas.query))
     return ('{"title": {"text": "Ventas del Mes"},"tooltip": {"trigger": "axis"},"legend": {"data": ["Ventas"]},"grid": {"left": "3%","right": "4%","bottom": "3%","containLabel": "true"},"toolbox": {"show": "true","feature": {"dataZoom": {"yAxisIndex": "none"},"dataView": { "readOnly": "false" },"magicType": { "type": ["line", "bar"] },"restore": {},"saveAsImage": {}}},"xAxis": {"type": "category","boundaryGap": "false","data": '+serialize(ventas, 'datetime__day')+'},"yAxis": {"type": "value"},"series": [{"name": "Ventas","type": "line","stack": "Total","data": '+serialize(ventas,'total')+'}]}')
 
+def product_most(firstdayofmonth):
+    #pubs=ProductSale.objects.select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('sale_id', 'product_id','product__producttype_id', 'product__producttype__category_id', 'product__producttype__category__name', 'sale__datetime')
+    #pubs=ProductSale.objects.select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'product__producttype__category_id', 'product__producttype__category__name', 'quantity', 'total', 'sale_id', 'product_id', 'sale__datetime')
+    #pubs=ProductSale.objects.filter(sale__datetime__gte=firstdayofmonth).select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'product__producttype__category_id', 'product__producttype__category__name', 'quantity', 'total', 'sale__datetime')
+    pubs=ProductSale.objects.filter(sale__datetime__gte=firstdayofmonth).select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'quantity', 'total').values('product__producttype_id', 'product__producttype__name').annotate(productos=Sum('quantity')).annotate(total=Sum('total')).order_by('productos')
+    hola=pubs[len(pubs)-1]
+    #print(hola)
+    return hola
+    
+    
+    
 
 def dashboard(request):
     option=[]
     name=[]
     firstdayofmonth=FirstDayOfMonth()
-    
     #Grafico de ventas del mes
     name.append('id_0')
     option.append(sales_month(firstdayofmonth))
@@ -36,5 +48,6 @@ def dashboard(request):
     context = {
         'options' :json_option ,
         'names':json_name,
+        'most_product':product_most(firstdayofmonth)
     }
     return render(request,"dashboard/dashboard.html",context)
