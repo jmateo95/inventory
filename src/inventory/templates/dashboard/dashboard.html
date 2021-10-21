@@ -23,12 +23,44 @@
     <!-- end page title --> 
     <!--Body-->
 
+    <br>
+    
+    <div class="row">
+        <div class="col-3" style="height: 10em;">
+            <div class="widget-rounded-circle card" style="height: 10em; border-radius: 2em;">
+                <div class="card-body">
+                    <div style="width: content-box; height: 9.0em; margin-top: 0.3em;">
+                        <div class="row">
+                            <div class="col-4">
+                            <div class="avatar-lg rounded-circle bg-warning border-warning border shadow" style="height: 3.5rem; width: 3.5rem;"><i class="fe-hash font-26 avatar-title text-white"></i></div>
+                            </div>
+                            <div class="col-8">
+                            <div class="text-end">
+                                <div class="row">
+                                    <div class="col">
+                                        <h3>{{ most_product.product__producttype__name }}</h3>
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{ most_product.productos }}</span></h3>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-1 text-truncate">Ganancias: {{ most_product.total }}</p>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <br>
 
     <div class="row">
         <div class="col-4">
             <div class="card" style="border-radius: 2em;">
                 <div class="card-body">
-                    <div id="main" style="width: auto;height:400px;"></div>
+                    <div id="id_0" style="width: auto;height:400px;"></div>
                 </div>
             </div>
         </div>
@@ -43,7 +75,7 @@
 {% block extra_javascript %}
 
 
-<script type="text/javascript">
+<!--script type="text/javascript">
     // Initialize the echarts instance based on the prepared dom
     var myChart = echarts.init(document.getElementById('main'));
 
@@ -99,6 +131,20 @@
 
     // Display the chart using the configuration items and data just specified.
     myChart.setOption(option);
-  </script>
+  </script-->
+
+  <!-- Enviar Charts-->
+<script>
+    var options = ("{{options|escapejs}}");
+    var names = ("{{names|escapejs}}");
+    const objOptions = JSON.parse(options);
+    const objNames = JSON.parse(names);
+    for (var i = 0; i < objNames.length; i++) {
+        var chartDom = document.getElementById(objNames[i]);
+        var myChart = echarts.init(chartDom);
+        const obj = JSON.parse(objOptions[i]);
+        myChart.setOption(obj);
+    }
+</script>
 
 {% endblock%}
