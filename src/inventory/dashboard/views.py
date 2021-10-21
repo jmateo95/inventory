@@ -28,7 +28,9 @@ def product_most(firstdayofmonth):
     #pubs=ProductSale.objects.select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'product__producttype__category_id', 'product__producttype__category__name', 'quantity', 'total', 'sale_id', 'product_id', 'sale__datetime')
     #pubs=ProductSale.objects.filter(sale__datetime__gte=firstdayofmonth).select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'product__producttype__category_id', 'product__producttype__category__name', 'quantity', 'total', 'sale__datetime')
     pubs=ProductSale.objects.filter(sale__datetime__gte=firstdayofmonth).select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'quantity', 'total').values('product__producttype_id', 'product__producttype__name').annotate(productos=Sum('quantity')).annotate(total=Sum('total')).order_by('productos')
-    hola=pubs[len(pubs)-1]
+    hola=None
+    if (len(pubs)>0):
+        hola=pubs[len(pubs)-1]
     #print(hola)
     return hola
         
