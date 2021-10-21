@@ -246,7 +246,12 @@ table[class=hide], img[class=hide], td[class=hide] {
                 
                 <table class="one-column" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0; border-left:1px solid #e8e7e5; border-right:1px solid #e8e7e5; border-bottom:1px solid #e8e7e5" bgcolor="#FFFFFF">
                   <tr>
-                    <td align="center" style="padding:40px 40px 60px 40px"><p style="color:#262626; font-size:32px; text-align:center; font-family: Verdana, Geneva, sans-serif">Enlace de confirmacion</p>
+                    <td align="center" style="padding:40px 40px 60px 40px"><p style="color:#262626; font-size:32px; text-align:center; font-family: Verdana, Geneva, sans-serif">
+                      {% if cancelar %}
+                      Enlace de cancelacion    
+                      {% else %}
+                      Enlace de confirmacion</p>
+                      {% endif %}
                       <p style="color:#000000; font-size:16px; text-align:center; font-family: Verdana, Geneva, sans-serif; line-height:22px"><b>{{ messages }}</b></p>
                       <!-- START BUTTON -->
                       

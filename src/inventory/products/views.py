@@ -9,7 +9,7 @@ from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives, message
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, request
 import uuid
 
 # Create your views here.
@@ -399,3 +399,25 @@ def delete_product_an_order(request, id_supplier, id_product_order):
     order_product.delete()
     messages.info(request,"Se removio el producto con exito")
     return redirect ("manual_order", id=id_supplier, nuevo=0)
+
+def cancel_order(request, id):
+    order = Order.objects.get(id=id)
+    body = "Por este medio, se le solicita cancelar la orden de pedido #" + str(order.id) + ", enviado la fecha: " + str(order.orderdate.date())
+    context = {
+        'cancelar':True,
+        'messages':body,
+    }
+    template = get_template('manager/orders/messages_confirm.html')
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Cancelacion de Pedido',
+        'Notificacion de cancelacion, de la empresa Dashtory',
+        settings.EMAIL_HOST_USER,
+        [order.supplier.email]
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    order.state = "Cancelado"
+    order.save()
+    messages.success(request, 'La orden #' + str(order.id) + ' a sido cancelada y el proveedor fue notificado.')
+    return redirect('list_orders')

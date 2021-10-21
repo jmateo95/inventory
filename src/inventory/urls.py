@@ -61,6 +61,7 @@ urlpatterns = [
     path('manager/btn_cancel_an_order/<int:id>', btn_cancel_an_order, name='btn_cancel_an_order'),
     path('manager/list_orders/', list_orders, name='list_orders'),
     path('manager/list_detail/<int:id>', details_of_order, name='list_detail'),
+    path('manager/cancel_order/<int:id>/', cancel_order, name="cancel_order"),
     # Paths para el cajero
     path('confirm_order/<str:key>/<int:id>', validation_order, name='validation_order'),
     path('cashier/register_client/', modal_register_client, name='register_client'),

@@ -65,6 +65,10 @@
                                 </td>
                                 <td style="text-align: center;">
                                     <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'list_detail' order.id %}" title="Detalle" ><i data-feather="align-justify" title="Detalle"></i></a></small>   
+                                    {% if order.state == "En Proceso" %}
+                                    <small style="font-size: 1.5em; padding-right: 0.5em;"><a href="{% url 'cancel_order' order.id %}" title="Cancelar" onclick="
+                                        return confirm('Seguro que desea cancelar esta orden')"><i data-feather="x-circle" title="Cancelar"></i></a></small>   
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
