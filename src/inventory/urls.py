@@ -19,8 +19,8 @@ from inventory.index.views import index, addgraph
 
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
-
 from inventory.clients.views import modal_register_client, register_sale, autocomplete_client, autocomplete_upc, insert_product,search_client, delete_temp_product
+
 from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, listlot, list_products_supplier, send_order_email, manual_purchase, btn_cancel_an_order, validation_order, list_orders, details_of_order
 from inventory.dashboard.views import dashboard
 urlpatterns = [
