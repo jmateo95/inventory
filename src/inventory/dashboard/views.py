@@ -31,8 +31,7 @@ def product_most(firstdayofmonth):
     hola=pubs[len(pubs)-1]
     #print(hola)
     return hola
-    
-    
+        
     
 
 def dashboard(request):
