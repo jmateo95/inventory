@@ -49,6 +49,14 @@
             {% if  user.rol.get_rol == 'Administrador' %}
             <ul id="side-admin">
                 <li class="menu-title">Administración</li>
+
+                <li>
+                    <a href="{% url 'dashboard' %}">
+                        <i data-feather="airplay"></i>
+                        <span> Dashboard </span>
+                    </a>
+                </li>
+
                 <li>
                     <a href="#sidebarUsers" data-bs-toggle="collapse">
                         <i data-feather="users"></i>
@@ -74,9 +82,9 @@
             {% endif %}
 
             {% if  user.rol.get_rol == 'Bodeguero' %}
-            <li class="menu-title">Gerencia</li>
+            
             <ul id="side-manager">
-                
+                <li class="menu-title">Gerencia</li>    
                 <li>
                     <!-- Area de Productos -->
                     <a href="#sidebarManagerProducts" data-bs-toggle="collapse">
@@ -140,6 +148,22 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <!-- Area de Pedidos -->
+                    <a href="#sidebarManagerOrder" data-bs-toggle="collapse">
+                        <i data-feather="clipboard"></i>
+                        <span> Pedidos </span>
+                    </a>
+                    <div class="collapse" id="sidebarManagerOrder">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a  class="btn-abrir-popup" href="{% url 'list_orders' %}">
+                                    <span> Lista de Pedidos </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
 
             {% endif %}
@@ -171,28 +195,6 @@
             </ul>
 
             {% endif %}
-
-            <ul id="side-menu">
-                <li class="menu-title">Menu</li>
-    
-                <li>
-                    <a href="#sidebarDashboards" data-bs-toggle="collapse">
-                        <i data-feather="airplay"></i>
-                        <span class="badge bg-success rounded-pill float-end">1</span>
-                        <span> Dashboards </span>
-                    </a>
-                    <div class="collapse" id="sidebarDashboards">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a  class="btn-abrir-popup" href="#">
-                                    <span> Nuevo Dashboard </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-
         </div>
         <!-- End Sidebar -->
 

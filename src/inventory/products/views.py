@@ -4,24 +4,31 @@ from django.db.models import manager
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from inventory import products
-from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier, Order, Order_Products
+from .models import Category, GroupProduct, ProductType, Supplier, ProductSupplier, Order, Order_Products,SalePrice
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductSupplierForm
 from django.template.loader import get_template
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, message
 from django.conf import settings
 from django.http import HttpResponseRedirect
+import uuid
 
 # Create your views here.
 
 def modify_order_product(request,id):
     product = ProductType.objects.get(id = id)
+    precio=SalePrice.objects.filter(producttype=product).order_by('-channgeddate').first().price
     if request.method == 'GET':
         context = {
-            'product':product,    
+            'product':product, 
+            'precio':precio,   
         }
     else:
         product.orderquantity = request.POST.get('reorderpoint')
         product.orderpoint = request.POST.get('orderpoint')
+        nuevo_precio=request.POST.get('precio')
+        if(str(precio)!=str(nuevo_precio)):
+            price=SalePrice(channgeddate = datetime.now(),price=nuevo_precio,producttype=product)
+            price.save()
         product.save()
         messages.success(request, "El punto de orden y el de reorden han sido modficados correctamente")
         return redirect ('listproduct')
@@ -39,7 +46,7 @@ def manual_purchase(request,id):
             }
         else:
             if(int(request.POST.get('quantity')) > 0):
-                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=int(request.POST.get('quantity')), supplier_id=request.POST.get('supplier'))
+                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=int(request.POST.get('quantity')), supplier_id=request.POST.get('supplier'), producttype_id=id)
                 newproduct.save()
                 product.quantity=product.quantity+newproduct.quantity
                 product.save()
@@ -105,8 +112,11 @@ def create_supplier(request):
             supplier = SupplierForm(request.POST)
             if supplier.is_valid():
                 supplier.save()
+                supplier = Supplier.objects.order_by('-id')[0]
+                supplier.active = True
+                supplier.save()
                 messages.success(request, "Proveedor \"" + request.POST.get('name') + "\" Agregado")
-                return redirect('home')
+                return redirect('suppliers')
     return render(request,"manager/form_create_supplier.html",context)
     
 def create_product_type(request):
@@ -121,7 +131,10 @@ def create_product_type(request):
         else:
             form = ProductForm(data=request.POST)
             if form.is_valid():
-                form.save()
+                ob=form.save()
+                price=SalePrice(channgeddate = datetime.now(),price=request.POST.get("price"),producttype=ob)
+                price.save()
+                
                 messages.info(request, 'El tipo de producto se creo correctamente!!')
                 return redirect("/") 
     context = {'form': form}        
@@ -132,6 +145,27 @@ def listproduct(request):
     products=ProductType.objects.all()
     context = {'products': products}
     return render(request, "products/manager/listproducts.html", context)
+
+
+def listlot(request, id):
+    productsg=GroupProduct.objects.filter(producttype_id=id, quantity__gt=0)
+    product=ProductType.objects.get(id=id)
+
+    if request.method == 'POST':
+        updatelote=GroupProduct.objects.get(upc=request.POST.get('upc'))
+        oldquantity=updatelote.quantity
+        newquantity=int(request.POST.get('quantity'))
+        product.quantity=product.quantity-oldquantity+newquantity
+        updatelote.quantity=int(request.POST.get('quantity'))
+        updatelote.save()
+        product.save()
+        messages.success(request, 'La cantidad del lote se actualizo')
+    context = {
+        'product': product,
+        'productsg': productsg,
+        }
+    return render(request, "products/manager/listlot.html", context)
+
 
 def list_categories(request):
     categories = Category.objects.all()
@@ -171,6 +205,7 @@ def list_products_supplier(request, id):
     if(request.method == 'GET'):
         order = Order()
         order.supplier = supplier
+        order.validation_key = uuid.uuid4()
         order.save()
         order = Order.objects.order_by('-id')[0]
         request.session['id_order']=order.id
@@ -181,16 +216,25 @@ def list_products_supplier(request, id):
         }
     else:
         order = Order.objects.get(id=request.session['id_order'])
-        product = ProductType.objects.get(id=request.POST.get('id_product'))
-        order_product = Order_Products()
-        order_product.quantity = request.POST.get('quantity')
-        order_product.producttype = product
-        order_product.numberoforder = order
-        order_product.save()
+        if(int(request.POST.get('quantity')) <= 0):
+            messages.error(request,'Debes de ingresar un numero mayor a 0')
+        else:
+            if (request.POST.get('id_product')):
+                product = ProductType.objects.get(id=request.POST.get('id_product'))
+                order_product = Order_Products.objects.filter(numberoforder_id=order.id).filter(producttype_id=product.id)
+                if (order_product.count() == 1):
+                    for op in order_product:
+                        op.quantity = op.quantity + int(request.POST.get('quantity'))
+                        op.save()
+                else:
+                    order_product = Order_Products()
+                    order_product.quantity = request.POST.get('quantity')
+                    order_product.producttype = product
+                    order_product.numberoforder = order
+                    order_product.save()
+            else:
+                messages.error(request,'Debes de seleccionar un producto')
         list_order_product = Order_Products.objects.filter(numberoforder_id=order.id)
-        #send_email(quantity, id_product, product, supplier.email, supplier.name)
-        #messages.success('Correo enviado con los productos solicitados')
-        #return redirect('list_suppliers')
         context = {
             'products':product_suppliers,
             'supplier':supplier,
@@ -202,11 +246,17 @@ def list_products_supplier(request, id):
 def send_order_email(request):
     order = Order.objects.get(id=request.session['id_order'])
     order_products = Order_Products.objects.filter(numberoforder_id=order.id)
+    if (order_products.count() <= 0):
+        messages.error(request, 'Correo no enviado al proveedor: ' + order.supplier.name + ', debido a que no se adjuntaron productos al pedido.')
+        order.delete()
+        del request.session['id_order']
+        return redirect('suppliers')
     context = {
         'supplier':order.supplier,
         'order_products':order_products,
         'numberoforder':order.id,
-        'date':order.orderdate
+        'date':order.orderdate,
+        'validation_key':order.validation_key
     }
     template = get_template('manager/orders/email_manual_order.html')
     content = template.render(context)
@@ -218,21 +268,18 @@ def send_order_email(request):
     )
     email.attach_alternative(content, 'text/html')
     email.send()
-    messages.success(request, 'Correo enviado con los productos solicitados')
-    return redirect('home')
+    order.state = "Enviado"
+    order.save()
+    messages.success(request, 'Correo enviado al proveedor: ' + order.supplier.name + ', con los productos solicitados.')
+    del request.session['id_order']
+    return redirect('suppliers')
 
-def send_email(quantity, id, name, mail, supplier):
-    context = {'supplier':supplier}
-    template = get_template('manager/orders/email_manual_order.html')
-    content = template.render(context)
-    email = EmailMultiAlternatives(
-        'Pedido de Productos',
-        'Realizacion de pedido, de la empresa Dashtory',
-        settings.EMAIL_HOST_USER,
-        [mail]
-    )
-    email.attach_alternative(content, 'text/html')
-    email.send()
+def btn_cancel_an_order(request, id):
+    order = Order.objects.get(id=id)
+    order.delete()
+    del request.session['id_order']
+    return redirect('suppliers')
+
 
 def suppliers(request):
     suppliers = Supplier.objects.filter(active=True)
@@ -250,7 +297,7 @@ def deletesupplier(request,id):
     return redirect ('suppliers')
 
 def deleteproductsupplier(request,id,id2):
-    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2,active=True)
+    productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2)
     if(productsupplier):
         productsupplier.delete()
         messages.success(request, "Enlace eliminado exitosamente" )
@@ -280,3 +327,47 @@ def supplier_products(request,id):
             
         }
     return render(request,"manager/supplier_products.html",context)   
+
+def validation_order(request, key, id):
+    try:
+        order = Order.objects.get(id=id)
+    except:
+        context = {'messages':"Numero de pedido, invalido."}
+        return render(request,"manager/orders/messages_confirm.html",context) 
+    if(request.method == 'GET'):
+        if (order):
+            if(order.validation_key == key):
+                if(order.state == "En Proceso"):
+                    context = {'messages':"Este enlace ya fue utilizado, y se confirmo la entrega."}
+                else:
+                    order.state = "En Proceso"
+                    order.save()
+                    context = {'messages':"Confirmacion de entrega de producto aceptada"}
+            else:
+                context = {'messages':"Llave de validacion incorrecta"}
+        else: 
+            context = {'messages':"Numero de pedido invalido"}
+    return render(request,"manager/orders/messages_confirm.html",context) 
+
+def list_orders(request):
+    orders = Order.objects.all()
+    context = {
+            'orders':orders
+        }
+    return render(request, "manager/orders/list_orders.html", context)   
+
+def details_of_order(request, id):
+    try:
+        order = Order.objects.get(id=id)
+    except:
+        messages.error(request,"Numero de pedido invalido")
+        return redirect("list_orders")
+    orders_products = Order_Products.objects.filter(numberoforder_id=id)
+    context = {
+        'id_order':id,
+        'supplier':order.supplier.name,
+        'order_products':orders_products,
+        'state':order.state,
+        'date':order.orderdate
+    }
+    return render(request, "manager/orders/detail_order.html",context)

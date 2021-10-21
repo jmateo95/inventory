@@ -19,7 +19,10 @@ from inventory.index.views import index, addgraph
 
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
-from inventory.clients.views import modal_register_client, register_sale, autocomplete_client, autocomplete_upc
+
+from inventory.clients.views import modal_register_client, register_sale, autocomplete_client, autocomplete_upc, insert_product,search_client, delete_temp_product
+from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, listlot, list_products_supplier, send_order_email, manual_purchase, btn_cancel_an_order, validation_order, list_orders, details_of_order
+from inventory.dashboard.views import dashboard
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
@@ -32,9 +35,15 @@ urlpatterns = [
     path('administrator/listuser/', listuser, name='listuser'),
     path('administrator/deleteuser/<int:id>/', deleteuser, name='deleteuser'),
     path('administrator/edituser/<int:id>/', edituser, name='edituser'),
+    path('administrator/dashboard/', dashboard, name='dashboard'),
+
 
     path('manager/listproduct/', listproduct, name='listproduct'),
     path('manager/manual_purchase/<int:id>/', manual_purchase, name='manual_purchase'),
+
+    path('manager/listlot/<int:id>/', listlot, name='list_lot'),
+
+
     
     # Paths para las funciones de manager 
     path('manager/edit_product/<int:id>/', modify_order_product, name='edit_product'),
@@ -49,10 +58,19 @@ urlpatterns = [
     path('manager/suppliers/', suppliers, name='suppliers'),
     path('manager/deletesupplier/<int:id>/', deletesupplier, name='deletesupplier'),
     path('manager/deleteproductsupplier/<int:id>/<int:id2>/', deleteproductsupplier, name='deleteproductsupplier'),
+    path('manager/btn_cancel_an_order/<int:id>', btn_cancel_an_order, name='btn_cancel_an_order'),
+    path('manager/list_orders/', list_orders, name='list_orders'),
+    path('manager/list_detail/<int:id>', details_of_order, name='list_detail'),
     # Paths para el cajero
+    path('confirm_order/<str:key>/<int:id>', validation_order, name='validation_order'),
     path('cashier/register_client/', modal_register_client, name='register_client'),
     path('cashier/register_sale/', register_sale, name='register_sale'),
     path('api/autocomplete_client/', autocomplete_client, name='autocomplete_client'),
-    path('api/autocomplete_upc/', autocomplete_upc, name='autocomplete_upc')
+    path('api/autocomplete_upc/', autocomplete_upc, name='autocomplete_upc'),
+    path('api/insert_product/', insert_product, name='insert_product'),
+    path('client/search_client/', search_client, name='search_client'),
+    path('client/delete_temp_product/', delete_temp_product, name='delete_temp_product')
+
+    
 ]
 

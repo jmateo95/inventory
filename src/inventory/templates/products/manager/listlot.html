@@ -1,0 +1,91 @@
+{% extends "inventory_base.html" %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<style type="text/css"> 
+    .transformacion1 { text-transform: capitalize;}   
+    .transformacion2 { text-transform: uppercase;}   
+    .transformacion3 { text-transform: lowercase;}   
+    </style> 
+{% endblock %}
+
+{% block content %}
+<!-- Start Content-->
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right" style="padding-right: 3em;"> 
+                    <a href="{% url 'listproduct'%}" class="btn btn-outline-dark" style="border-radius: 2em;"><i data-feather="skip-back"></i>Atras</a>
+                </div>
+                <h4 class="page-title transformacion2" style="padding-left: 1.5em;"><i data-feather="archive"></i>  LOTES EN EXISTENCIA DEL PRODUCTO: {{product}}</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <!--Body-->
+
+
+    <div class="row" style="padding-left: 3em; padding-right: 3em;">
+        <div class="card" style="border-radius: 25px;">
+            <div class="card-body p-4">
+                <table id="list_product" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Upc</th>
+                            <th>Proveedor</th>
+                            <th>Cantidad</th>
+                            <th>Fecha de Ingreso</th>
+                            <th>Fecha de expiracion</th>
+                            <th style="width: 12em; text-align: center;">Nueva Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for productg in productsg %}
+                        <tr>
+                            <td>{{ productg.upc }}</td>
+                            <td>{{ productg.supplier }}</td>
+                            <td>{{ productg.quantity }}</td>
+                            <td>{{ productg.ingressdate }}</td>
+                            <td>{{ productg.expirationdate }}</td>
+                            <td>
+                                <form method="POST", enctype="multipart/form-data">
+                                    {% csrf_token %} 
+                                    <input type="hidden" name="upc" value={{ productg.upc }}>
+                                    <div class="row">               
+                                        <div class="col-8">
+                                            <input class="form-control" name="quantity" id="quantity" type="number" min="0" placeholder="Cantidad" value="{{ productg.quantity }}"required>
+                                        </div>
+                                        <div class="col-4">
+                                            <small style="font-size: 1.5em;"><button class="btn btn-link" style="font-size:1.2em; padding: 0%; margin: 0%;"><i class="far fa-check-square" title="Actualizar"></i></button></small>
+                                        </div>
+                                    </div>
+                                </form>
+                 
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>        
+    </div> 
+    <!--End Body-->       
+</div>
+<!-- container -->
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    $(document).ready(function() {
+        $('#list_product').DataTable().addClass("pagination-rounded");
+    } );
+</script>
+
+{% endblock%}

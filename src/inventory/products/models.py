@@ -54,12 +54,14 @@ class GroupProduct(models.Model):
     ingressdate=models.DateTimeField(default=now)
     expirationdate=models.DateTimeField()
     quantity=models.IntegerField()
+    producttype=models.ForeignKey(ProductType, on_delete=CASCADE, related_name='ProductType_GropuProducts')
     supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Supplier_GropuProducts')
 
 class Order(models.Model):
     id=models.AutoField(primary_key=True)
     orderdate=models.DateTimeField(default=now)
-    state=models.CharField(max_length=200, default='No Enviado')
+    state=models.CharField(max_length=200, default='No Completado')
+    validation_key=models.CharField(max_length=200)
     supplier=models.ForeignKey(Supplier, on_delete=CASCADE, related_name='Order_Supplier')
 
 class Order_Products(models.Model):

@@ -28,3 +28,10 @@ class ProductSale(models.Model):
     sale=models.ForeignKey(Sale,on_delete=CASCADE, related_name='ProductSale_Sale')
     quantity=models.IntegerField(default = 1)
     total=models.DecimalField(max_digits=8, decimal_places=2)
+
+class TempProductSale(models.Model):
+    id=models.AutoField(primary_key=True)
+    number=models.IntegerField()
+    product=models.ForeignKey(GroupProduct,on_delete=CASCADE, related_name='Temp_Sale_Cashier')
+    quantity=models.IntegerField(default = 1)
+    total=models.DecimalField(max_digits=8, decimal_places=2)
