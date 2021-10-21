@@ -28,7 +28,6 @@ def modify_order_product(request,id):
         return redirect ('listproduct')
     return render(request,"manager/form_edit_orders.html",context)
 
-
 def manual_purchase(request,id):
     try:
         product = ProductType.objects.get(id = id)
@@ -52,10 +51,6 @@ def manual_purchase(request,id):
     except:
         messages.error(request, "El producto seleccionado no existe")
         return redirect('listproduct')
-
-
-
-
 
 def create_category(request):
     categories = Category.objects.all()
@@ -157,7 +152,6 @@ def listlot(request, id):
         }
     return render(request, "products/manager/listlot.html", context)
 
-
 def list_categories(request):
     categories = Category.objects.all()
     context = {
@@ -172,7 +166,6 @@ def product_suppliers(request,id):
     aux=1
     if request.method != 'POST':
         form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
-
     else:
         form = ProductSupplierForm(data=request.POST,other_suppliers=other_suppliers,producttype=id,aux=aux)
         
@@ -190,10 +183,10 @@ def product_suppliers(request,id):
         }
     return render(request,"manager/product_suppliers.html",context)    
     
-def list_products_supplier(request, id):
+def list_products_supplier(request, id, nuevo):
     supplier = Supplier.objects.get(id=id,active=True)
     product_suppliers = ProductType.objects.filter(Producttype_Supplier__supplier=id)
-    if(request.method == 'GET'):
+    if request.method == 'GET' and nuevo == 1:
         order = Order()
         order.supplier = supplier
         order.validation_key = uuid.uuid4()
@@ -204,6 +197,14 @@ def list_products_supplier(request, id):
             'products':product_suppliers,
             'supplier':supplier,
             'order_id':order.id
+        }
+    elif request.method == 'GET' and nuevo == 0:
+        list_order_product = Order_Products.objects.filter(numberoforder_id=request.session['id_order'])
+        context = {
+            'products':product_suppliers,
+            'supplier':supplier,
+            'order_id':request.session['id_order'],
+            'order_products':list_order_product
         }
     else:
         order = Order.objects.get(id=request.session['id_order'])
@@ -223,6 +224,8 @@ def list_products_supplier(request, id):
                     order_product.producttype = product
                     order_product.numberoforder = order
                     order_product.save()
+                    messages.success(request,'Agregado')
+                    return redirect ("manual_order", id=id, nuevo=0)
             else:
                 messages.error(request,'Debes de seleccionar un producto')
         list_order_product = Order_Products.objects.filter(numberoforder_id=order.id)
@@ -270,7 +273,6 @@ def btn_cancel_an_order(request, id):
     order.delete()
     del request.session['id_order']
     return redirect('suppliers')
-
 
 def suppliers(request):
     suppliers = Supplier.objects.filter(active=True)
@@ -377,7 +379,8 @@ def details_of_order(request, id):
                 if check_products == 0 and order.state == "En Proceso":
                     order.state = "Procesado"
                     order.save()
-                messages.success(request, "Se ingreso la cantidad correctamente")
+                messages.success(request, "Se agrego el lote correctamente")
+                redirect ("list_detail",id=id)
             else:
                 messages.error(request, "Existio un error en la cantidad por favor intentelo de nuevo")
         except:
@@ -391,3 +394,8 @@ def details_of_order(request, id):
             }
     return render(request, "manager/orders/detail_order.html",context)
 
+def delete_product_an_order(request, id_supplier, id_product_order):
+    order_product = Order_Products.objects.get(id=id_product_order)
+    order_product.delete()
+    messages.info(request,"Se removio el producto con exito")
+    return redirect ("manual_order", id=id_supplier, nuevo=0)

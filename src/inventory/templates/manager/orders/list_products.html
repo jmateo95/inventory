@@ -168,6 +168,7 @@
                                 <th>Id</th>
                                 <th>Producto</th>
                                 <th>Cantidad Solicitada</th>
+                                <th> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -176,6 +177,10 @@
                                 <td>{{ order_product.producttype.id }}</td>
                                 <td>{{ order_product.producttype.name }}</td>
                                 <td>{{ order_product.quantity }}</td>
+                                <td style="text-align: center;">
+                                    <small style="font-size: 1.5em"><a href="{% url 'remove_product' supplier.id order_product.id %}" title="Eliminar" class="delete" onclick="
+                                        return confirm('Seguro que deseas remover este producto de la orden')"><i class="fe-trash-2"></i></a></small>      
+                                </td>
                             </tr>
                             {% endfor %}
     
