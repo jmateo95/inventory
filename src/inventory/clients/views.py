@@ -13,7 +13,7 @@ from decimal import *
 
 # Create your views here.
 
-def modal_register_client(request):
+def modal_register_client(request): # Bryan - 1
     exist = False
     clients = Client.objects.all()
     if request.method == 'GET':

@@ -14,7 +14,7 @@ import uuid
 
 # Create your views here.
 
-def modify_order_product(request,id):
+def modify_order_product(request,id): # Bryan - 1 
     product = ProductType.objects.get(id = id)
     precio=SalePrice.objects.filter(producttype=product).order_by('-channgeddate').first().price
     if request.method == 'GET':
@@ -58,7 +58,7 @@ def manual_purchase(request,id):
         messages.error(request, "El producto seleccionado no existe")
         return redirect('listproduct')
 
-def create_category(request):
+def create_category(request): # Bryan - 1
     categories = Category.objects.all()
     exist = False
     if request.method == 'GET':
@@ -83,7 +83,7 @@ def create_category(request):
                 return redirect('home')
     return render(request,"manager/form_create_category.html", context)
 
-def create_supplier(request):
+def create_supplier(request): # Bryan - 1
     exist = False
     suppliers = Supplier.objects.all()
     if request.method == 'GET':
@@ -161,7 +161,7 @@ def listlot(request, id):
         }
     return render(request, "products/manager/listlot.html", context)
 
-def list_categories(request):
+def list_categories(request): # Bryan
     categories = Category.objects.all()
     context = {
             'categories':categories
@@ -192,7 +192,7 @@ def product_suppliers(request,id):
         }
     return render(request,"manager/product_suppliers.html",context)    
     
-def list_products_supplier(request, id, nuevo):
+def list_products_supplier(request, id, nuevo): # Bryan - 1
     supplier = Supplier.objects.get(id=id,active=True)
     product_suppliers = ProductType.objects.filter(Producttype_Supplier__supplier=id)
     if request.method == 'GET' and nuevo == 1:
@@ -200,7 +200,7 @@ def list_products_supplier(request, id, nuevo):
         order.supplier = supplier
         order.validation_key = uuid.uuid4()
         order.save()
-        order = Order.objects.order_by('-id')[0]
+        #order = Order.objects.order_by('-id')[0]
         request.session['id_order']=order.id
         context = {
             'products':product_suppliers,
@@ -246,7 +246,7 @@ def list_products_supplier(request, id, nuevo):
         }
     return render(request, "manager/orders/list_products.html", context)
 
-def send_order_email(request):
+def send_order_email(request): # Bryan - 1
     order = Order.objects.get(id=request.session['id_order'])
     order_products = Order_Products.objects.filter(numberoforder_id=order.id)
     if (order_products.count() <= 0):
@@ -277,7 +277,7 @@ def send_order_email(request):
     del request.session['id_order']
     return redirect('suppliers')
 
-def btn_cancel_an_order(request, id):
+def btn_cancel_an_order(request, id): # Bryan
     order = Order.objects.get(id=id)
     order.delete()
     del request.session['id_order']
@@ -330,7 +330,7 @@ def supplier_products(request,id):
         }
     return render(request,"manager/supplier_products.html",context)   
 
-def validation_order(request, key, id):
+def validation_order(request, key, id): # Bryan
     try:
         order = Order.objects.get(id=id)
     except:
@@ -351,14 +351,14 @@ def validation_order(request, key, id):
             context = {'messages':"Numero de pedido invalido"}
     return render(request,"manager/orders/messages_confirm.html",context) 
 
-def list_orders(request):
+def list_orders(request): # Bryan
     orders = Order.objects.all()
     context = {
             'orders':orders
         }
     return render(request, "manager/orders/list_orders.html", context)   
 
-def details_of_order(request, id):
+def details_of_order(request, id): # Bryan - 1
     try:
         order = Order.objects.get(id=id)
     except:
@@ -403,13 +403,13 @@ def details_of_order(request, id):
             }
     return render(request, "manager/orders/detail_order.html",context)
 
-def delete_product_an_order(request, id_supplier, id_product_order):
+def delete_product_an_order(request, id_supplier, id_product_order): # Bryan
     order_product = Order_Products.objects.get(id=id_product_order)
     order_product.delete()
     messages.info(request,"Se removio el producto con exito")
     return redirect ("manual_order", id=id_supplier, nuevo=0)
 
-def cancel_order(request, id):
+def cancel_order(request, id): # Bryan - 1
     order = Order.objects.get(id=id)
     body = "Por este medio, se le solicita cancelar la orden de pedido #" + str(order.id) + ", enviado la fecha: " + str(order.orderdate.date())
     context = {
