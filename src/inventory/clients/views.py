@@ -21,11 +21,7 @@ def modal_register_client(request): # Bryan - 1
             'success':exist
         }
     else:
-        print(request.POST)
-        for client  in clients:
-            if client.nit == request.POST.get('nit'):
-                exist = True
-                print (client.nit)
+        exist = check_exist_nit(clients, request.POST.get('nit'))
         if exist:
             context = {
                 'success':exist,
@@ -45,6 +41,12 @@ def modal_register_client(request): # Bryan - 1
                 context = {'success':True}
     return render(request,"cashier/client/register_client.html",context)
 
+def check_exist_nit(clients, compare):
+    for client  in clients:
+        if client.nit == compare:
+            return True
+    return False
+    
 def register_sale(request):
     # supplier = Supplier.objects.get(id = id,active=True)
     # supplier_products = ProductType.objects.filter(Producttype_Supplier__supplier=id)
