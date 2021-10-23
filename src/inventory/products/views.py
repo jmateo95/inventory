@@ -430,3 +430,6 @@ def cancel_order(request, id): # Bryan - 1
     order.save()
     messages.success(request, 'La orden #' + str(order.id) + ' a sido cancelada y el proveedor fue notificado.')
     return redirect('list_orders')
+
+def prueba_suma(a, b):
+    return a + b
