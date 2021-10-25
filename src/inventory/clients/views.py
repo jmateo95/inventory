@@ -46,21 +46,13 @@ def modal_register_client(request):
     return render(request,"cashier/client/register_client.html",context)
 
 def register_sale(request):
-    # supplier = Supplier.objects.get(id = id,active=True)
-    # supplier_products = ProductType.objects.filter(Producttype_Supplier__supplier=id)
-    # other_producttypes= ProductType.objects.exclude(id__in = supplier_products.values('id'))
-    # aux=0
     if request.method == 'GET':
          TempProductSale.objects.all().delete()
     if request.method == 'POST':
         nit=request.POST.get('client_nit')
         
         if(nit=="C/F" or nit==""):
-            
-            client=Client.objects.get(nit="C/F")
-            
-                
-                
+            client=Client.objects.get(nit="C/F")   
         elif Client.objects.filter(nit = nit).exists():
             client=Client.objects.filter(nit = nit)
         else:      
@@ -68,7 +60,7 @@ def register_sale(request):
         temps=TempProductSale.objects.all()
         if(temps.count()>0):
             user=User.objects.get(username=request.POST.get('user'))
-            new_sale=Sale(client=client,cashier=user,datetime=datetime.now(),total=get_temp_total())
+            new_sale=Sale(client=client,cashier=user,datetime=datetime.now(),total=get_temp_total(TempProductSale.objects.all()))
             new_sale.save()
             for temp in temps:
                 new_product_sale=ProductSale(product=temp.product,sale=new_sale,quantity=temp.quantity,total=temp.total)
@@ -78,24 +70,6 @@ def register_sale(request):
         else:
             messages.error(request,'No existen productos seleccionados')
             
-        
-        
-    #     form = ProductSupplierForm(other_producttypes=other_producttypes,supplier=id,aux=aux)   
-    # else:
-    #     form = ProductSupplierForm(data=request.POST,other_producttypes=other_producttypes,supplier=id,aux=aux)
-        
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.info(request, 'El producto se enlazo correctamente')
-    #         return redirect("supplier_products",id=id)
-    #     else:
-    #         messages.info(request, 'No valido')
-    # context = { 
-    #          'supplier':supplier,
-    #          'supplier_products':supplier_products,
-    #          'form':form
-            
-    #     }
     context={}
     return render(request,"cashier/register_sale.html",context)   
 
@@ -130,13 +104,11 @@ def insert_product(request):
     number=TempProductSale.objects.all().count()+1
     group=GroupProduct.objects.get(upc=upc)
     product_name=group.producttype.name
-    saleprice=SalePrice.objects.filter(producttype=group.producttype).order_by('-channgeddate').first()
-    total=Decimal(quantity)*saleprice.price
-    
+    total=get_total(quantity,SalePrice.objects.filter(producttype=group.producttype).order_by('-channgeddate').first())
     #Creates temp model
     tempSale=TempProductSale(number=number,product=group,quantity=quantity,total=total)
     tempSale.save()
-    temp_total=get_temp_total()
+    temp_total=get_temp_total(TempProductSale.objects.all())
     try:
         productsale={"upc":upc,
                         "quantity":quantity,
@@ -150,6 +122,9 @@ def insert_product(request):
         response_data={"error":True,"errorMessage":"Failed to Update Data"}
         return JsonResponse(response_data,safe=False)
 
+def get_total(quantity, saleprice):
+    return Decimal(quantity)*saleprice
+
 def get_temp_total():
     total=0
     temps=TempProductSale.objects.all()
@@ -157,14 +132,13 @@ def get_temp_total():
         total+=temp.total
     return total
 
+
 @csrf_exempt
 def search_client(request):
     client_nit=request.POST.get("client_nit")
     if Client.objects.filter(nit = client_nit).exists():
         client=Client.objects.get(nit = client_nit)
-        name=client.name+" "+client.last_name
-        
-        clientInfo={"name":name,
+        clientInfo={"name":str(client),
                         "phone":client.phone}
         try:
             response_data={"clientInfo": clientInfo,"error":False,"errorMessage":"Updated Successfully"}
@@ -186,5 +160,5 @@ def delete_temp_product(request):
     product_number=data
     temp=TempProductSale.objects.get(number=product_number)
     temp.delete()
-    response_data={"error":False,"errorMessage":"Updated Successfully","temp_total":str(get_temp_total())}
+    response_data={"error":False,"errorMessage":"Updated Successfully","temp_total":str(get_temp_total(TempProductSale.objects.all()))}
     return JsonResponse(response_data,safe=False)
