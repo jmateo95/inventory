@@ -11,10 +11,11 @@ from django.core.mail import EmailMultiAlternatives, message
 from django.conf import settings
 from django.http import HttpResponseRedirect, request
 import uuid
+import os
 
 # Create your views here.
 
-def modify_order_product(request,id):
+def modify_order_product(request,id): # Bryan - 1 
     product = ProductType.objects.get(id = id)
     precio=SalePrice.objects.filter(producttype=product).order_by('-channgeddate').first().price
     if request.method == 'GET':
@@ -58,7 +59,18 @@ def manual_purchase(request,id):
         messages.error(request, "El producto seleccionado no existe")
         return redirect('listproduct')
 
-def create_category(request):
+def check_existence(list, name, case):
+    if case == 1: # Comprobar categorias
+        for item in list:
+            if item.name.lower() == name.lower():
+                return True
+    elif case == 2: # Comprobar proveedores
+        for item in list:
+            if item.email.lower() == name.lower():
+                return True
+    return False
+
+def create_category(request): # Bryan - 1
     categories = Category.objects.all()
     exist = False
     if request.method == 'GET':
@@ -66,9 +78,7 @@ def create_category(request):
             'categories':categories
         }
     else:
-        for category in categories:
-            if category.name.lower() == request.POST.get('name').lower():
-                exist = True
+        exist = check_existence(categories, request.POST.get('name'), 1)
         if exist:
             context = {
                 'success':exist,
@@ -83,7 +93,7 @@ def create_category(request):
                 return redirect('home')
     return render(request,"manager/form_create_category.html", context)
 
-def create_supplier(request):
+def create_supplier(request): # Bryan - 1
     exist = False
     suppliers = Supplier.objects.all()
     if request.method == 'GET':
@@ -91,10 +101,7 @@ def create_supplier(request):
             'success':exist
         }
     else:
-        for supplier  in suppliers:
-            if supplier.email.lower() == request.POST.get('email').lower():
-                exist = True
-                print (supplier.email.lower())
+        exist = check_existence(suppliers, request.POST.get('email'), 2)
         if exist:
             context = {
                 'success':exist,
@@ -161,11 +168,9 @@ def listlot(request, id):
         }
     return render(request, "products/manager/listlot.html", context)
 
-def list_categories(request):
+def list_categories(request): # Bryan
     categories = Category.objects.all()
-    context = {
-            'categories':categories
-        }
+    context = { 'categories':categories }
     return render(request, "manager/list_categories.html", context)
 
 def product_suppliers(request,id):
@@ -192,16 +197,12 @@ def product_suppliers(request,id):
         }
     return render(request,"manager/product_suppliers.html",context)    
     
-def list_products_supplier(request, id, nuevo):
+def list_products_supplier(request, id, nuevo): # Bryan - 1
     supplier = Supplier.objects.get(id=id,active=True)
     product_suppliers = ProductType.objects.filter(Producttype_Supplier__supplier=id)
     if request.method == 'GET' and nuevo == 1:
-        order = Order()
-        order.supplier = supplier
-        order.validation_key = uuid.uuid4()
-        order.save()
-        order = Order.objects.order_by('-id')[0]
-        request.session['id_order']=order.id
+        order = create_order_with__key(supplier)
+        request.session['id_order'] = order.id
         context = {
             'products':product_suppliers,
             'supplier':supplier,
@@ -222,17 +223,10 @@ def list_products_supplier(request, id, nuevo):
         else:
             if (request.POST.get('id_product')):
                 product = ProductType.objects.get(id=request.POST.get('id_product'))
-                order_product = Order_Products.objects.filter(numberoforder_id=order.id).filter(producttype_id=product.id)
-                if (order_product.count() == 1):
-                    for op in order_product:
-                        op.quantity = op.quantity + int(request.POST.get('quantity'))
-                        op.save()
+                if add_quantity_to_order_product(order.id, product.id, int(request.POST.get('quantity'))):
+                    messages.success(request,'Agregado')
                 else:
-                    order_product = Order_Products()
-                    order_product.quantity = request.POST.get('quantity')
-                    order_product.producttype = product
-                    order_product.numberoforder = order
-                    order_product.save()
+                    add_new_product_to_order(request.POST.get('quantity'), product, order)
                     messages.success(request,'Agregado')
                     return redirect ("manual_order", id=id, nuevo=0)
             else:
@@ -246,7 +240,37 @@ def list_products_supplier(request, id, nuevo):
         }
     return render(request, "manager/orders/list_products.html", context)
 
-def send_order_email(request):
+def create_order_with__key(supplier):
+    return Order.objects.create(
+        supplier = supplier,
+        validation_key = uuid.uuid4()
+    )
+
+def validation_uuid(key):
+    try:
+        uuid.UUID(key, version=4)
+    except ValueError:
+        return False
+    return True
+
+def add_quantity_to_order_product(number_order, id_product, add_quantity):
+    order_product = Order_Products.objects.filter(numberoforder_id=number_order).filter(producttype_id=id_product)
+    if (order_product.count() == 1):
+        for op in order_product:
+            op.quantity = op.quantity + add_quantity
+            op.save()
+        return True
+    return False
+
+def add_new_product_to_order(quantity, product, order):
+    order_product = Order_Products.objects.create(
+        quantity = quantity,
+        producttype = product,
+        numberoforder = order
+    )
+    return order_product
+
+def send_order_email(request): # Bryan - 1
     order = Order.objects.get(id=request.session['id_order'])
     order_products = Order_Products.objects.filter(numberoforder_id=order.id)
     if (order_products.count() <= 0):
@@ -259,8 +283,11 @@ def send_order_email(request):
         'order_products':order_products,
         'numberoforder':order.id,
         'date':order.orderdate,
-        'validation_key':order.validation_key
+        'validation_key':order.validation_key,
+        'domain':os.environ.get("DOMINIO")
     }
+    print('DOMAIN')
+    print (os.environ.get("DOMINIO"))
     template = get_template('manager/orders/email_manual_order.html')
     content = template.render(context)
     email = EmailMultiAlternatives(
@@ -277,7 +304,7 @@ def send_order_email(request):
     del request.session['id_order']
     return redirect('suppliers')
 
-def btn_cancel_an_order(request, id):
+def btn_cancel_an_order(request, id): # Bryan
     order = Order.objects.get(id=id)
     order.delete()
     del request.session['id_order']
@@ -330,7 +357,7 @@ def supplier_products(request,id):
         }
     return render(request,"manager/supplier_products.html",context)   
 
-def validation_order(request, key, id):
+def validation_order(request, key, id): # Bryan
     try:
         order = Order.objects.get(id=id)
     except:
@@ -338,7 +365,7 @@ def validation_order(request, key, id):
         return render(request,"manager/orders/messages_confirm.html",context) 
     if(request.method == 'GET'):
         if (order):
-            if(order.validation_key == key):
+            if(order.validation_key == key and validation_uuid(key) == True):
                 if(order.state == "En Proceso"):
                     context = {'messages':"Este enlace ya fue utilizado, y se confirmo la entrega."}
                 else:
@@ -351,14 +378,14 @@ def validation_order(request, key, id):
             context = {'messages':"Numero de pedido invalido"}
     return render(request,"manager/orders/messages_confirm.html",context) 
 
-def list_orders(request):
+def list_orders(request): # Bryan
     orders = Order.objects.all()
     context = {
             'orders':orders
         }
     return render(request, "manager/orders/list_orders.html", context)   
 
-def details_of_order(request, id):
+def details_of_order(request, id): # Bryan - 1
     try:
         order = Order.objects.get(id=id)
     except:
@@ -380,10 +407,7 @@ def details_of_order(request, id):
             order_product.date = datetime.now()
             order_product.save()
             if(int(request.POST.get('quantity')) > 0):
-                newproduct=GroupProduct.objects.create(ingressdate=datetime.now(), expirationdate=request.POST.get('expirationdate'), quantity=order_product.quantity, supplier_id=order_product.numberoforder.supplier.id, producttype_id=order_product.producttype.id)
-                newproduct.save()
-                product.quantity=product.quantity+newproduct.quantity
-                product.save()
+                enter_the_order_product(request.POST.get('expirationdate'), order_product.quantity, order_product.numberoforder.supplier.id, order_product.producttype.id, product)
                 check_products = Order_Products.objects.filter(numberoforder_id=id).filter(date=None).count()
                 if check_products == 0 and order.state == "En Proceso":
                     order.state = "Procesado"
@@ -403,13 +427,28 @@ def details_of_order(request, id):
             }
     return render(request, "manager/orders/detail_order.html",context)
 
-def delete_product_an_order(request, id_supplier, id_product_order):
+def enter_the_order_product(expire_date, quantity, supplier_id, product_id, product):
+    try:
+        group_product = GroupProduct.objects.create(
+            ingressdate = datetime.now(), 
+            expirationdate = expire_date,
+            quantity = quantity, 
+            supplier_id = supplier_id, 
+            producttype_id = product_id )
+        group_product.save()
+        product.quantity = product.quantity + group_product.quantity
+        product.save()
+        return True
+    except Exception:
+        return False
+
+def delete_product_an_order(request, id_supplier, id_product_order): # Bryan
     order_product = Order_Products.objects.get(id=id_product_order)
     order_product.delete()
     messages.info(request,"Se removio el producto con exito")
     return redirect ("manual_order", id=id_supplier, nuevo=0)
 
-def cancel_order(request, id):
+def cancel_order(request, id): # Bryan - 1
     order = Order.objects.get(id=id)
     body = "Por este medio, se le solicita cancelar la orden de pedido #" + str(order.id) + ", enviado la fecha: " + str(order.orderdate.date())
     context = {
