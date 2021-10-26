@@ -16,7 +16,7 @@ def productType(db, category) -> ProductType:
 
 @pytest.fixture
 def supplier(db) -> Supplier:
-    return Supplier(email="supplier@gmail.com",name="supplier",active=True,address="Quetzaltenango",phone=58479665)
+    return Supplier.objects.create(email="supplier@gmail.com",name="supplier",active=True,address="Quetzaltenango",phone=58479665)
     
 @pytest.fixture
 def groupProduct(db, productType, supplier) -> GroupProduct:
@@ -26,6 +26,5 @@ def groupProduct(db, productType, supplier) -> GroupProduct:
 
 @pytest.mark.django_db
 def test_check_existence_nit(db,groupProduct):
-    groupProduct.supplier.save()
     remove_products_from_stock(5,groupProduct)
     assert  groupProduct.quantity==0 and groupProduct.producttype.quantity==5
