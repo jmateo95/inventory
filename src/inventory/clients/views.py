@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.http import JsonResponse
+
+from inventory.products.views import automatic_order
 from .models import Client, TempProductSale, Sale, ProductSale
 from datetime import datetime
 from inventory.products.models import GroupProduct,SalePrice,ProductType
@@ -81,8 +83,10 @@ def register_sale(request):
     return render(request,"cashier/register_sale.html",context)   
 
 def verify_automatic_order(producttype):
-    if producttype.quantity<=producttype.orderpoint:
-        pass
+    if producttype.quantity<=producttype.orderpoint and producttype.default_supplier != None:
+        if automatic_order(producttype):
+            producttype.order_in_progress = True
+            producttype.save()
 
 @transaction.atomic
 def remove_products_from_stock(quantity,productgroup):

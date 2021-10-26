@@ -182,9 +182,11 @@ def product_suppliers(request,id):
         form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
     else:
         form = ProductSupplierForm(data=request.POST,other_suppliers=other_suppliers,producttype=id,aux=aux)
-        
         if form.is_valid():
             form.save()
+            if request.POST.get('default_supplier') != None:
+                product.default_supplier = Supplier.objects.get(id=int(form['supplier'].value()))
+                product.save()
             messages.info(request, 'El proveedor se enlazo correctamente')
             return redirect("product_suppliers",id=id)
         else:
@@ -442,6 +444,7 @@ def enter_the_order_product(expire_date, quantity, supplier_id, product_id, prod
             producttype_id = product_id )
         group_product.save()
         product.quantity = product.quantity + group_product.quantity
+        product.order_in_progress = False
         product.save()
         return True
     except Exception:
@@ -475,13 +478,9 @@ def cancel_order(request, id): # Bryan - 1
     messages.success(request, 'La orden #' + str(order.id) + ' a sido cancelada y el proveedor fue notificado.')
     return redirect('list_orders')
 
-def automatic_order(id_product):
-    # product_supplier = ProductSupplier.objects.get(producttype__id=id_poduct, default=true)
-    # product = Product.objects.get(id=id_product)
-    # Creando Orden
-    # order = create_order_with__key(product_supplier.supplier)
-    # add_new_product_to_order(product_supplier.producttype.orderquantity, product_supplier.producttype, order)
-    """
+def automatic_order(producttype):
+    order = create_order_with__key(producttype.default_supplier)
+    add_new_product_to_order(producttype.orderquantity, producttype, order)
     order_products = Order_Products.objects.filter(numberoforder_id=order.id)
     context = {
         'supplier':order.supplier,
@@ -503,5 +502,4 @@ def automatic_order(id_product):
     email.send()
     order.state = "Enviado"
     order.save()
-    messages.success(request, 'Correo enviado al proveedor: ' + order.supplier.name + ', con los productos solicitados.')
-    """
+    return True
