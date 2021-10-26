@@ -474,3 +474,34 @@ def cancel_order(request, id): # Bryan - 1
     order.save()
     messages.success(request, 'La orden #' + str(order.id) + ' a sido cancelada y el proveedor fue notificado.')
     return redirect('list_orders')
+
+def automatic_order(id_product):
+    # product_supplier = ProductSupplier.objects.get(producttype__id=id_poduct, default=true)
+    # product = Product.objects.get(id=id_product)
+    # Creando Orden
+    # order = create_order_with__key(product_supplier.supplier)
+    # add_new_product_to_order(product_supplier.producttype.orderquantity, product_supplier.producttype, order)
+    """
+    order_products = Order_Products.objects.filter(numberoforder_id=order.id)
+    context = {
+        'supplier':order.supplier,
+        'order_products':order_products,
+        'numberoforder':order.id,
+        'date':order.orderdate,
+        'validation_key':order.validation_key,
+        'domain':os.environ.get("DOMINIO")
+    }
+    template = get_template('manager/orders/email_manual_order.html')
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Pedido de Productos',
+        'Realizacion de pedido, de la empresa Dashtory',
+        settings.EMAIL_HOST_USER,
+        [order.supplier.email]
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    order.state = "Enviado"
+    order.save()
+    messages.success(request, 'Correo enviado al proveedor: ' + order.supplier.name + ', con los productos solicitados.')
+    """
