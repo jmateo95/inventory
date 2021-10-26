@@ -69,6 +69,8 @@ def register_sale(request):
                 new_product_sale=ProductSale(product=temp.product,sale=new_sale,quantity=temp.quantity,total=temp.total)
                 new_product_sale.save()
                 remove_products_from_stock(temp.quantity,temp.product)
+                if temp.product.producttype.order_in_progress==False:
+                    verify_automatic_order(temp.product.producttype)
             messages.info(request, 'Compra Realizada Correctamente')
             TempProductSale.objects.all().delete()    
                 
@@ -78,7 +80,9 @@ def register_sale(request):
     context={}
     return render(request,"cashier/register_sale.html",context)   
 
-
+def verify_automatic_order(producttype):
+    if producttype.quantity<=producttype.orderpoint:
+        pass
 
 @transaction.atomic
 def remove_products_from_stock(quantity,productgroup):
