@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
+from django.db.models.deletion import CASCADE, SET_NULL
 from django.utils.timezone import now
 
 class Category (models.Model):
@@ -29,6 +29,8 @@ class ProductType (models.Model):
     orderquantity=models.IntegerField(null=True)
     quantity=models.IntegerField(default=0)
     category=models.ForeignKey(Category, on_delete=CASCADE, related_name='Category_Products')
+    default_supplier=models.ForeignKey(Supplier,null=True, on_delete=SET_NULL, related_name='Default_Supplier')
+    order_in_progress=models.BooleanField(default=False,null=True)
 
     def __str__(self):
         return "%s" % (self.name)
