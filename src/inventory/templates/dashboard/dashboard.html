@@ -52,6 +52,28 @@
             <div class="widget-rounded-circle card" style="height: 10em; border-radius: 2em;">
                 <div class="card-body">
                     <div style="width: content-box; height: 9.0em; margin-top: 0.3em;">
+                        {% if most_category %}
+                        <div class="row">
+                                <h5 style="text-align: right;">Categoria mas vendida: {{ most_category.product__producttype__category__name }}</h5>
+                            <div class="col-4">
+                            <div class="avatar-lg rounded-circle bg-warning border-warning border shadow" style="height: 3.5rem; width: 3.5rem;"><i class="fe-hash font-26 avatar-title text-white"></i></div>
+                            </div>
+                            <div class="col-8">
+                            <div class="text-end">
+                                <h3 class="text-dark mt-1"><span data-plugin="counterup">{{ most_category.productos }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Ganancias: {{ most_category.total }}</p>
+                            </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3" style="height: 10em;">
+            <div class="widget-rounded-circle card" style="height: 10em; border-radius: 2em;">
+                <div class="card-body">
+                    <div style="width: content-box; height: 9.0em; margin-top: 0.3em;">
                         {% if worst_product %}
                         <div class="row">
                                 <h5 style="text-align: right;">Producto menos vendido: {{ worst_product.product__producttype__name }}</h5>
@@ -70,12 +92,34 @@
                 </div>
             </div>
         </div>
+        <div class="col-3" style="height: 10em;">
+            <div class="widget-rounded-circle card" style="height: 10em; border-radius: 2em;">
+                <div class="card-body">
+                    <div style="width: content-box; height: 9.0em; margin-top: 0.3em;">
+                        {% if worst_category %}
+                        <div class="row">
+                                <h5 style="text-align: right;">Categoria menos vendida: {{ worst_category.product__producttype__category__name }}</h5>
+                            <div class="col-4">
+                            <div class="avatar-lg rounded-circle bg-warning border-warning border shadow" style="height: 3.5rem; width: 3.5rem;"><i class="fe-hash font-26 avatar-title text-white"></i></div>
+                            </div>
+                            <div class="col-8">
+                            <div class="text-end">
+                                <h3 class="text-dark mt-1"><span data-plugin="counterup">{{ worst_category.productos }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Ganancias: {{ worst_category.total }}</p>
+                            </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
         
     <br>
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-6">
             <div class="card" style="border-radius: 2em;">
                 <div class="card-body">
                     <div id="id_0" style="width: auto;height:400px;"></div>

@@ -16,24 +16,25 @@ def index(request):
     name.append('id_0')
     name.append('id_1')
     name.append('id_2')
-
     json_option = json.dumps(option)
     json_name = json.dumps(name)
-
     nombre='Jonathan'
-
     #messages.success(request, "Registration successful." )
-
     form = UsersForm(request.POST or None, request.FILES or None)
-
-
     context = {
         'options' :json_option ,
         'names':json_name,
         'nombre': nombre,
         'form' : form,
     }
-    return render(request, "index/index.html", context) 
+    if (request.user.rol.id==1):
+        return redirect ('dashboard')
+    elif(request.user.rol.id==2):
+        return redirect ('listproduct')
+    else:
+        return redirect ('register_sale')
+
+    #return render(request, "index/index.html", context) 
 
 
 def addgraph(request):

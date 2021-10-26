@@ -19,8 +19,36 @@ class UsersPermissions():
         if str(request.user) != 'AnonymousUser' :
             if str(request.path).startswith('/accounts/login'):
                 return redirect('/')
+            else:
+                #Validaciones de seguridad
+                if str(request.path).startswith('/administrator'):
+                    if(request.user.rol.id < 2):
+                        return None
+                    else:
+                        return redirect('/')
+                if str(request.path).startswith('/manager'):
+                    if(request.user.rol.id < 3):
+                        return None
+                    else:
+                        return redirect('/')
+                if str(request.path).startswith('/cashier'):
+                    if(request.user.rol.id < 4 ):
+                        return None
+                    else:
+                        return redirect('/')
+                if str(request.path).startswith('/api'):
+                    if(request.user.rol.id < 4 ):
+                        return None
+                    else:
+                        return redirect('/')
+                if str(request.path).startswith('/client'):
+                    if(request.user.rol.id < 4 ):
+                        return None
+                    else:
+                        return redirect('/')
         else:
             if str(request.path).startswith('/accounts'):
                 return None
             else:
                 return redirect('/accounts/login/')
+
