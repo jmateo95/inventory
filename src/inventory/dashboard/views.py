@@ -33,6 +33,15 @@ def product_most(firstdayofmonth):
         hola=pubs[len(pubs)-1]
     #print(hola)
     return hola
+    
+
+def product_worst(firstdayofmonth):
+    pubs=ProductSale.objects.filter(sale__datetime__gte=firstdayofmonth).select_related('sale', 'product', 'product__producttype', 'product__producttype__category').values_list('product__producttype_id', 'product__producttype__name', 'quantity', 'total').values('product__producttype_id', 'product__producttype__name').annotate(productos=Sum('quantity')).annotate(total=Sum('total')).order_by('productos')
+    hola=None
+    if (len(pubs)>0):
+        hola=pubs[0]
+    #print(hola)
+    return hola
         
     
 
@@ -49,6 +58,8 @@ def dashboard(request):
     context = {
         'options' :json_option ,
         'names':json_name,
-        'most_product':product_most(firstdayofmonth)
+        'most_product':product_most(firstdayofmonth),
+        'worst_product':product_worst(firstdayofmonth),
+        
     }
     return render(request,"dashboard/dashboard.html",context)
