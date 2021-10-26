@@ -10,6 +10,7 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from decimal import *
+from django.db import transaction
 
 # Create your views here.
 
@@ -52,33 +53,44 @@ def register_sale(request):
          TempProductSale.objects.all().delete()
     if request.method == 'POST':
         nit=request.POST.get('client_nit')
-        
         if(nit=="C/F" or nit==""):
             client=Client.objects.get(nit="C/F")   
         elif Client.objects.filter(nit = nit).exists():
             client=Client.objects.filter(nit = nit)
         else:      
             messages.error(request,'Cliente no existe')
+            return render(request,"cashier/register_sale.html") 
         temps=TempProductSale.objects.all()
         if(temps.count()>0):
             user=User.objects.get(username=request.POST.get('user'))
-            new_sale=Sale(client=client,cashier=user,datetime=datetime.now(),total=get_temp_total(TempProductSale.objects.all()))
+            new_sale=Sale(client=client,cashier=user,datetime=datetime.now(),total=get_temp_total())
             new_sale.save()
             for temp in temps:
                 new_product_sale=ProductSale(product=temp.product,sale=new_sale,quantity=temp.quantity,total=temp.total)
                 new_product_sale.save()
-                messages.info(request, 'Compra Realizada Correctamente')
-                TempProductSale.objects.all().delete()
+                remove_products_from_stock(temp.quantity,temp.product)
+            messages.info(request, 'Compra Realizada Correctamente')
+            TempProductSale.objects.all().delete()    
+                
         else:
             messages.error(request,'No existen productos seleccionados')
             
     context={}
     return render(request,"cashier/register_sale.html",context)   
 
+
+
+@transaction.atomic
+def remove_products_from_stock(quantity,productgroup):
+    productgroup.quantity=productgroup.quantity-quantity
+    productgroup.producttype.quantity=productgroup.producttype.quantity-quantity
+    productgroup.save()
+    productgroup.producttype.save()
+
 def autocomplete_upc(request):
     if request.is_ajax():
         query = request.GET.get("term", "")
-        products = GroupProduct.objects.filter(upc__icontains=query)
+        products = get_upc_for_autocomplete(query)
         titles = list()
         for product in products:
             titles.append(str(product.upc))
@@ -86,10 +98,14 @@ def autocomplete_upc(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+def get_upc_for_autocomplete(term):
+    return GroupProduct.objects.filter(upc__icontains=term)
+
 def autocomplete_client(request):
     if request.is_ajax():
         query = request.GET.get("term", "")
-        clients = Client.objects.filter(nit__icontains=query)
+        clients = get_nit_for_autocomplete(query)
+        
         titles = list()
         for product in clients:
             titles.append(product.nit)
@@ -97,6 +113,8 @@ def autocomplete_client(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+def get_nit_for_autocomplete(term):
+    return Client.objects.filter(nit__icontains=term)
 
 @csrf_exempt
 def insert_product(request):
@@ -106,11 +124,12 @@ def insert_product(request):
     number=TempProductSale.objects.all().count()+1
     group=GroupProduct.objects.get(upc=upc)
     product_name=group.producttype.name
-    total=get_total(quantity,SalePrice.objects.filter(producttype=group.producttype).order_by('-channgeddate').first())
+    saleprice=SalePrice.objects.filter(producttype=group.producttype).order_by('-channgeddate').first()
+    total=get_total(quantity,saleprice)
     #Creates temp model
     tempSale=TempProductSale(number=number,product=group,quantity=quantity,total=total)
     tempSale.save()
-    temp_total=get_temp_total(TempProductSale.objects.all())
+    temp_total=get_temp_total()
     try:
         productsale={"upc":upc,
                         "quantity":quantity,
@@ -125,7 +144,7 @@ def insert_product(request):
         return JsonResponse(response_data,safe=False)
 
 def get_total(quantity, saleprice):
-    return Decimal(quantity)*saleprice
+    return Decimal(quantity)*Decimal(saleprice.price)
 
 def get_temp_total():
     total=0
@@ -162,5 +181,5 @@ def delete_temp_product(request):
     product_number=data
     temp=TempProductSale.objects.get(number=product_number)
     temp.delete()
-    response_data={"error":False,"errorMessage":"Updated Successfully","temp_total":str(get_temp_total(TempProductSale.objects.all()))}
+    response_data={"error":False,"errorMessage":"Updated Successfully","temp_total":str(get_temp_total())}
     return JsonResponse(response_data,safe=False)

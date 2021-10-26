@@ -66,7 +66,7 @@ urlpatterns = [
     # Paths para el cajero
     path('confirm_order/<str:key>/<int:id>', validation_order, name='validation_order'),
     path('cashier/register_client/', modal_register_client, name='register_client'),
-    path('x', register_sale, name='register_sale'),
+    path('cashier/register_sale/', register_sale, name='register_sale'),
     path('api/autocomplete_client/', autocomplete_client, name='autocomplete_client'),
     path('api/autocomplete_upc/', autocomplete_upc, name='autocomplete_upc'),
     path('api/insert_product/', insert_product, name='insert_product'),

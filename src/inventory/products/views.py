@@ -325,6 +325,11 @@ def deletesupplier(request,id):
         messages.success(request, "Proveedor "+name+" eliminado exitosamente" )
     return redirect ('suppliers')
 
+def deactivate_supplier(supplier):
+    supplier.active=False
+    supplier.save()
+    return supplier
+
 def deleteproductsupplier(request,id,id2):
     productsupplier=ProductSupplier.objects.filter(supplier=id,producttype=id2)
     if(productsupplier):
