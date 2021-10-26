@@ -182,9 +182,11 @@ def product_suppliers(request,id):
         form = ProductSupplierForm(other_suppliers=other_suppliers,producttype=id,aux=aux)
     else:
         form = ProductSupplierForm(data=request.POST,other_suppliers=other_suppliers,producttype=id,aux=aux)
-        
         if form.is_valid():
             form.save()
+            if request.POST.get('default_supplier') != None:
+                product.default_supplier = Supplier.objects.get(id=int(form['supplier'].value()))
+                product.save()
             messages.info(request, 'El proveedor se enlazo correctamente')
             return redirect("product_suppliers",id=id)
         else:
@@ -442,6 +444,7 @@ def enter_the_order_product(expire_date, quantity, supplier_id, product_id, prod
             producttype_id = product_id )
         group_product.save()
         product.quantity = product.quantity + group_product.quantity
+        product.order_in_progress = False
         product.save()
         return True
     except Exception:
@@ -474,3 +477,29 @@ def cancel_order(request, id): # Bryan - 1
     order.save()
     messages.success(request, 'La orden #' + str(order.id) + ' a sido cancelada y el proveedor fue notificado.')
     return redirect('list_orders')
+
+def automatic_order(producttype):
+    order = create_order_with__key(producttype.default_supplier)
+    add_new_product_to_order(producttype.orderquantity, producttype, order)
+    order_products = Order_Products.objects.filter(numberoforder_id=order.id)
+    context = {
+        'supplier':order.supplier,
+        'order_products':order_products,
+        'numberoforder':order.id,
+        'date':order.orderdate,
+        'validation_key':order.validation_key,
+        'domain':os.environ.get("DOMINIO")
+    }
+    template = get_template('manager/orders/email_manual_order.html')
+    content = template.render(context)
+    email = EmailMultiAlternatives(
+        'Pedido de Productos',
+        'Realizacion de pedido, de la empresa Dashtory',
+        settings.EMAIL_HOST_USER,
+        [order.supplier.email]
+    )
+    email.attach_alternative(content, 'text/html')
+    email.send()
+    order.state = "Enviado"
+    order.save()
+    return True

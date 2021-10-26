@@ -9,7 +9,7 @@ from .models import ProductType, Category
 class ProductForm(forms.ModelForm):
     class Meta:
         model = ProductType
-        exclude = ('quantity',)
+        exclude = ('quantity','default_supplier','order_in_progress')
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['name']= CharField(label="Nombre", required =True) 
