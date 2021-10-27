@@ -48,7 +48,10 @@ class UsersPermissions():
                         return redirect('/')
         else:
             if str(request.path).startswith('/accounts'):
-                return None
+                if str(request.path).startswith('/accounts/signup'):
+                    return redirect('/accounts/login/')
+                else:
+                    return None
             else:
                 return redirect('/accounts/login/')
 

@@ -81,7 +81,7 @@
 
             {% endif %}
 
-            {% if  user.rol.get_rol == 'Bodeguero' %}
+            {% if  user.rol.get_rol == 'Bodeguero' or user.rol.get_rol == 'Administrador' %}
             
             <ul id="side-manager">
                 <li class="menu-title">Gerencia</li>    
