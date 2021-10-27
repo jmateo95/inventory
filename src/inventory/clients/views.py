@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Sum
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.http import JsonResponse
@@ -192,3 +193,48 @@ def delete_temp_product(request):
     temp.delete()
     response_data={"error":False,"errorMessage":"Updated Successfully","temp_total":str(get_temp_total())}
     return JsonResponse(response_data,safe=False)
+
+def list_client(request):
+    context = { 'clients':Client.objects.all() }
+    return render (request, "cashier/client/list-client.html", context)
+
+def transacction_cashier(request):
+    transactions = Sale.objects.filter(cashier=request.user).filter(datetime__gte=datetime.today().replace(hour=00).replace(minute=00).replace(second=00))
+    total = transactions.aggregate(total_price=Sum('total'))['total_price']
+    
+    context = {
+        'date':datetime.now(),
+        'transactions':transactions,
+        'total':total
+    }
+    if request.method == 'POST':
+        if request.POST.get('date-time'):
+            transactions = Sale.objects.filter(cashier=request.user).filter(datetime__lte=request.POST.get('date-time'))
+            total = transactions.aggregate(total_price=Sum('total'))['total_price']
+            context = {
+                'date':request.POST.get('date-time'),
+                'transactions':transactions,
+                'total':total
+            }
+    return render (request, "cashier/list-transactions.html", context)
+
+def transacction(request):
+    transactions = Sale.objects.all().filter(datetime__gte=datetime.today().replace(hour=00).replace(minute=00).replace(second=00))
+    print ((transactions[0].cashier))
+    total = transactions.aggregate(total_price=Sum('total'))['total_price']
+    
+    context = {
+        'date':datetime.now(),
+        'transactions':transactions,
+        'total':total
+    }
+    if request.method == 'POST':
+        if request.POST.get('date-time'):
+            transactions = Sale.objects.filter(cashier=request.user).filter(datetime__lte=request.POST.get('date-time'))
+            total = transactions.aggregate(total_price=Sum('total'))['total_price']
+            context = {
+                'date':request.POST.get('date-time'),
+                'transactions':transactions,
+                'total':total
+            }
+    return render (request, "manager/transactions.html", context)

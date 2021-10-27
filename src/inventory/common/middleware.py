@@ -52,6 +52,9 @@ class UsersPermissions():
                     return redirect('/accounts/login/')
                 else:
                     return None
+
+            elif str(request.path).startswith('/confirm_order'):
+                return None
             else:
                 return redirect('/accounts/login/')
 
