@@ -52,12 +52,11 @@
                                     <th>Nombre</th>
                                     <th>Existencia</th>
                                     <th>Categoria</th>
-                                    <th style="width: 6em; text-align: center;">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for product in products %}
-                                <tr>
+                                <tr style="cursor: pointer;" onclick="display('{{ product.id }}', '{{ product.name }}')">
                                     <td>{{ product.id }}</td>
                                     <td>{{ product.name }}</td>
                                     <td>
@@ -68,10 +67,6 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ product.category }}</td>
-                                    <td style="text-align: center;">    
-                                        <small style="font-size: 1.5em"><a href="#" title="Seleccionar" onclick="display('{{ product.id }}', '{{ product.name }}')"><i data-feather="check-circle" title="ProSeleccionarveedores"></i></a></small>
-                                        
-                                    </td>
                                 </tr>
                                 {% endfor %}
         
