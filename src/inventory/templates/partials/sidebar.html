@@ -164,6 +164,12 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <a href="{% url 'transactions' %}">
+                        <i data-feather="trending-up"></i>
+                        <span> Transacciones </span>
+                    </a>
+                </li>
             </ul>
 
             {% endif %}
@@ -189,12 +195,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a  class="btn-abrir-popup" href="#">
+                                <a  class="btn-abrir-popup" href="{% url 'list-client' %}">
                                     <span> Lista de Clientes </span>
                                 </a>
                             </li>
                         </ul>
                     </div>
+                    <a href="{% url 'transactions-cashier' %}">
+                        <i data-feather="trending-up"></i>
+                        <span> Transacciones </span>
+                    </a>
+
                 </li>
             </ul>
 

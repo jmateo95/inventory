@@ -13,13 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from os import name
 from django.contrib import admin
 from django.urls import path, include
 from inventory.index.views import index, addgraph
 
 from inventory.products.views import *
 from inventory.users.views import adduser, newuser, listuser, deleteuser, edituser
-from inventory.clients.views import modal_register_client, register_sale, autocomplete_client, autocomplete_upc, insert_product,search_client, delete_temp_product
+from inventory.clients.views import list_client, modal_register_client, register_sale, autocomplete_client, autocomplete_upc, insert_product,search_client, delete_temp_product, transacction, transacction_cashier
 
 from inventory.products.views import modify_order_product, create_product_type, list_categories, listproduct, listlot, list_products_supplier, send_order_email, manual_purchase, btn_cancel_an_order, validation_order, list_orders, details_of_order
 from inventory.dashboard.views import dashboard
@@ -71,8 +72,10 @@ urlpatterns = [
     path('api/autocomplete_upc/', autocomplete_upc, name='autocomplete_upc'),
     path('api/insert_product/', insert_product, name='insert_product'),
     path('client/search_client/', search_client, name='search_client'),
-    path('client/delete_temp_product/', delete_temp_product, name='delete_temp_product')
-
+    path('client/delete_temp_product/', delete_temp_product, name='delete_temp_product'),
+    path('cashier/list_client', list_client, name='list-client'),
+    path('cashier/transactions/', transacction_cashier, name='transactions-cashier'),
+    path('manager/transactions_manager/', transacction, name='transactions')
     
 ]
 
