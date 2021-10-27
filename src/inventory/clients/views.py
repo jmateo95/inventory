@@ -79,8 +79,9 @@ def register_sale(request):
                 
         else:
             messages.error(request,'No existen productos seleccionados')
-            
-    context={}
+    groupProduct=GroupProduct.objects.all().order_by("producttype") 
+    print(groupProduct)      
+    context={"products":groupProduct}
     return render(request,"cashier/register_sale.html",context)   
 
 def verify_automatic_order(producttype):
