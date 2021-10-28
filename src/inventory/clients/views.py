@@ -132,26 +132,41 @@ def insert_product(request):
     upc=request.POST.get("upc")
     quantity=request.POST.get("quantity")
     number=TempProductSale.objects.all().count()+1
+    if upc=="" or not upc.isnumeric() or not GroupProduct.objects.filter(upc=upc).exists():
+        response_data={"error":True,"errorMessage":"UPC invalido"}
+        return JsonResponse(response_data,safe=False)
     group=GroupProduct.objects.get(upc=upc)
     product_name=group.producttype.name
     saleprice=SalePrice.objects.filter(producttype=group.producttype).order_by('-channgeddate').first()
     total=get_total(quantity,saleprice)
+    temps=TempProductSale.objects.filter(product=group)
+    
+    aux=0
+    for temp in temps:
+        aux+=temp.quantity
+        
+    if (int(quantity)+aux)>group.quantity:
+        response_data={"error":True,"errorMessage":"Cantidad no disponible en inventario"}
+        return JsonResponse(response_data,safe=False)
+    else:
+
     #Creates temp model
-    tempSale=TempProductSale(number=number,product=group,quantity=quantity,total=total)
-    tempSale.save()
-    temp_total=get_temp_total()
-    try:
-        productsale={"upc":upc,
-                        "quantity":quantity,
-                        "saleprice":str(saleprice.price),
-                        "product_name":product_name,
-                        "number":str(number),
-                        "total":total}
-        response_data={"productsale": productsale,"error":False,"errorMessage":"Updated Successfully","temp_total":str(temp_total)}
-        return JsonResponse(response_data,safe=False)
-    except:
-        response_data={"error":True,"errorMessage":"Failed to Update Data"}
-        return JsonResponse(response_data,safe=False)
+        tempSale=TempProductSale(number=number,product=group,quantity=quantity,total=total)
+        tempSale.save()
+        
+        temp_total=get_temp_total()
+        try:
+            productsale={"upc":upc,
+                            "quantity":quantity,
+                            "saleprice":str(saleprice.price),
+                            "product_name":product_name,
+                            "number":str(number),
+                            "total":total}
+            response_data={"productsale": productsale,"error":False,"errorMessage":"Updated Successfully","temp_total":str(temp_total)}
+            return JsonResponse(response_data,safe=False)
+        except:
+            response_data={"error":True,"errorMessage":"Failed to Update Data"}
+            return JsonResponse(response_data,safe=False)
 
 def get_total(quantity, saleprice):
     return Decimal(quantity)*Decimal(saleprice.price)
