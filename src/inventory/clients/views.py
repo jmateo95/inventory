@@ -80,7 +80,7 @@ def register_sale(request):
         else:
             messages.error(request,'No existen productos seleccionados')
     groupProduct=GroupProduct.objects.all().order_by("producttype") 
-    print(groupProduct)      
+    #print(groupProduct)      
     context={"products":groupProduct}
     return render(request,"cashier/register_sale.html",context)   
 
@@ -235,7 +235,7 @@ def transacction_cashier(request):
 
 def transacction(request):
     transactions = Sale.objects.all().filter(datetime__gte=datetime.today().replace(hour=00).replace(minute=00).replace(second=00))
-    print ((transactions[0].cashier))
+    #print ((transactions[0].cashier))
     total = transactions.aggregate(total_price=Sum('total'))['total_price']
     
     context = {
