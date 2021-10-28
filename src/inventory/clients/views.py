@@ -59,7 +59,7 @@ def register_sale(request):
         if(nit=="C/F" or nit==""):
             client=Client.objects.get(nit="C/F")   
         elif Client.objects.filter(nit = nit).exists():
-            client=Client.objects.filter(nit = nit)
+            client=Client.objects.get(nit = nit)
         else:      
             messages.error(request,'Cliente no existe')
             return render(request,"cashier/register_sale.html") 

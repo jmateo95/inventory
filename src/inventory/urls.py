@@ -75,7 +75,7 @@ urlpatterns = [
     path('client/delete_temp_product/', delete_temp_product, name='delete_temp_product'),
     path('cashier/list_client', list_client, name='list-client'),
     path('cashier/transactions/', transacction_cashier, name='transactions-cashier'),
-    path('manager/transactions_manager/', transacction, name='transactions')
+    path('administrator/transactions_manager/', transacction, name='transactions')
     
 ]
 

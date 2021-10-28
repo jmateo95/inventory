@@ -164,14 +164,15 @@
                         </ul>
                     </div>
                 </li>
-                <li>
-                    <a href="{% url 'transactions' %}">
-                        <i data-feather="trending-up"></i>
-                        <span> Transacciones </span>
-                    </a>
-                </li>
+                {% if user.rol.get_rol == 'Administrador' %}
+                    <li>
+                        <a href="{% url 'transactions' %}">
+                            <i data-feather="trending-up"></i>
+                            <span> Transacciones </span>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
-
             {% endif %}
 
             {% if  user.rol.get_rol == 'Vendedor' %}

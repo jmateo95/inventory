@@ -32,17 +32,17 @@ class UsersPermissions():
                     else:
                         return redirect('/')
                 if str(request.path).startswith('/cashier'):
-                    if(request.user.rol.id < 4 ):
+                    if(request.user.rol.id == 3 ):
                         return None
                     else:
                         return redirect('/')
                 if str(request.path).startswith('/api'):
-                    if(request.user.rol.id < 4 ):
+                    if(request.user.rol.id == 3 ):
                         return None
                     else:
                         return redirect('/')
                 if str(request.path).startswith('/client'):
-                    if(request.user.rol.id < 4 ):
+                    if(request.user.rol.id == 3 ):
                         return None
                     else:
                         return redirect('/')
