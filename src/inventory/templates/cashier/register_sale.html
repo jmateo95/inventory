@@ -301,6 +301,7 @@
                         $("#suma").text(response['temp_total'])
 
                     } else {
+                        alert(response['errorMessage'])
                         console.log(response['error'])
                     }
                 })
